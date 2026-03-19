@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Простое право — Знание прав освобождает от неприятностей</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        // Инициализация TWA
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+        tg.setHeaderColor('#0a0a0a');
+        tg.setBackgroundColor('#0a0a0a');
+    </script>
+</head>
+
+<body>
+    <!-- Навигация -->
+    <nav class="navbar">
+        <div class="logo" onclick="showPage('home')">⚡️ Простое право</div>
+        <ul class="nav-links">
+            <li><a href="#library" onclick="showPage('library'); return false;">📚 Библиотека</a></li>
+            <li><a href="#problems">Проблемы</a></li>
+            <li><a href="#test">Тест</a></li>
+            <li><a href="#pricing">Тарифы</a></li>
+        </ul>
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+    </nav>
+
+    <!-- ГЛАВНАЯ СТРАНИЦА -->
+    <div id="page-home">
+        <!-- Hero Section -->
+        <header class="hero">
+            <div class="hero-content">
+                <div class="badge">🔥 Для зумеров, которые хотят быть в безопасности</div>
+                <h1>Знание прав <span class="highlight">освобождает</span> от неприятностей</h1>
+                <p class="subtitle">И от манипуляций тех, кто считает тебя бесправным. Короткие гайды без воды и юридического сленга.</p>
+                
+                <div class="hero-buttons">
+                    <a href="#library" class="btn btn-primary" onclick="showPage('library'); return false;">📚 Открыть библиотеку уроков</a>
+                    <a href="#continue" class="btn btn-secondary" onclick="continueLearning(); return false;">▶️ Продолжить обучение</a>
+                </div>
+
+                <div class="trust-badges">
+                    <span>✓ <span id="completed-counter">0</span>/24 уроков</span>
+                    <span>✓ Без договоров оферты</span>
+                    <span>✓ Отмена в 1 клик</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Библиотека (новая секция в стиле проблем) -->
+        <section id="library" class="problems">
+            <h2>📚 Библиотека знаний</h2>
+            <p class="section-subtitle">Выбери тему и изучи за 15 минут</p>
+            
+            <div class="category-chips">
+                <button class="chip active" onclick="filterLibrary('all')">Все</button>
+                <button class="chip" onclick="filterLibrary('rent')">🏠 Аренда</button>
+                <button class="chip" onclick="filterLibrary('work')">💼 Работа</button>
+                <button class="chip" onclick="filterLibrary('money')">💸 Деньги</button>
+            </div>
+
+            <div class="problem-grid" id="library-grid">
+                <!-- JS заполнит -->
+            </div>
+        </section>
+
+        <!-- Блок боли (Проблемы) -->
+        <section id="problems" class="problems">
+            <h2>Типичные ситуации, где тебя могут кинуть</h2>
+            <div class="problem-grid">
+                <div class="problem-card urgent" onclick="openLesson(1)">
+                    <span class="icon">🏠</span>
+                    <h3>Съезжаешь от родителей?</h3>
+                    <p>80% договоров аренды содержат кабальные пункты. Покажем, где именно подвох.</p>
+                    <span class="link-arrow">Открыть урок →</span>
+                </div>
+                
+                <div class="problem-card" onclick="openLesson(2)">
+                    <span class="icon">💼</span>
+                    <h3>Первое ТК или фриланс</h3>
+                    <p>Работодатель говорит «это стандартная форма»? Научим читать между строк.</p>
+                    <span class="link-arrow">Чек-лист по ТК →</span>
+                </div>
+                
+                <div class="problem-card" onclick="openLesson(3)">
+                    <span class="icon">📱</span>
+                    <h3>Подписки и автоплатежи</h3>
+                    <p>Сервис списал деньги после бесплатного периода? Как вернуть и отключить.</p>
+                    <span class="link-arrow">Инструкция →</span>
+                </div>
+                
+                <div class="problem-card" onclick="openLesson(4)">
+                    <span class="icon">💸</span>
+                    <h3>Коллекторы и долги</h3>
+                    <p>Страшные письма и звонки? 60% их угроз — блеф. Разберем, когда бояться.</p>
+                    <span class="link-arrow">Что делать? →</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Форматы обучения -->
+        <section id="formats" class="formats">
+            <h2>Как это работает</h2>
+            <p class="section-subtitle">Никаких лекций по 2 часа. Только то, что нужно прямо сейчас.</p>
+            
+            <div class="format-grid">
+                <div class="format-card">
+                    <div class="format-icon">⚡️</div>
+                    <h3>Закон за 60 сек</h3>
+                    <p>Вертикальные видео для Reels/TikTok + текстовая версия для тех, кто в метро.</p>
+                </div>
+                
+                <div class="format-card highlight">
+                    <div class="format-icon">📋</div>
+                    <h3>Чек-листы выживания</h3>
+                    <p>PDF на телефон: «Что проверить перед подписанием», «Какие фото сделать».</p>
+                    <span class="tag">Самое популярное</span>
+                </div>
+                
+                <div class="format-card">
+                    <div class="format-icon">🎮</div>
+                    <h3>Симулятор переговоров</h3>
+                    <p>Интерактив: бот-работодатель пытается тебя обмануть, ты выбираешь ответы.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Интерактивный тест -->
+        <section id="test" class="quiz-section">
+            <div class="quiz-container">
+                <h2>Проверь свой юридический уровень</h2>
+                <div id="quiz">
+                    <div class="quiz-question active" data-question="1">
+                        <p class="question-text">1/3. Ты сдаешь квартиру. Жилец разбил окно. Кто платит?</p>
+                        <div class="quiz-options">
+                            <button class="quiz-btn" onclick="answer(1, false)">Жилец, он же разбил</button>
+                            <button class="quiz-btn" onclick="answer(1, true)">Смотря что написано в акте приема-передачи</button>
+                            <button class="quiz-btn" onclick="answer(1, false)">Делим пополам</button>
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-question" data-question="2">
+                        <p class="question-text">2/3. Тебя уволили «по соглашению сторон» без выплат. Твои действия?</p>
+                        <div class="quiz-options">
+                            <button class="quiz-btn" onclick="answer(2, false)">Подписать, чтобы не конфликтовать</button>
+                            <button class="quiz-btn" onclick="answer(2, true)">Требовать компенсацию или отказаться</button>
+                            <button class="quiz-btn" onclick="answer(2, false)">Написать гневный пост в Twitter</button>
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-question" data-question="3">
+                        <p class="question-text">3/3. Пришло письмо от коллекторов по чужому долгу. Что делать?</p>
+                        <div class="quiz-options">
+                            <button class="quiz-btn" onclick="answer(3, false)">Игнорировать — раз не мой долг</button>
+                            <button class="quiz-btn" onclick="answer(3, false)">Заплатить, чтобы отстали</button>
+                            <button class="quiz-btn" onclick="answer(3, true)">Направить заявление о прекращении обработки данных</button>
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-result" id="quiz-result">
+                        <h3 id="result-title"></h3>
+                        <p id="result-text"></p>
+                        <a href="#library" class="btn btn-primary" onclick="showPage('library')">Начать учиться</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Тарифы -->
+        <section id="pricing" class="pricing">
+            <h2>Тарифы</h2>
+            <p class="section-subtitle">Честные цены без скрытых платежей. Отмена в любой момент.</p>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>SOS</h3>
+                    <div class="price">0 ₽</div>
+                    <ul>
+                        <li>База статей «Что делать, если...»</li>
+                        <li>Бот-консультант по базовым вопросам</li>
+                        <li>Чек-листы в Telegram</li>
+                    </ul>
+                    <button class="btn btn-outline" onclick="showPage('library')">Начать бесплатно</button>
+                </div>
+                
+                <div class="pricing-card popular">
+                    <div class="badge-popular">Выбор зумеров</div>
+                    <h3>Базовый</h3>
+                    <div class="price">990 ₽<span>/мес</span></div>
+                    <ul>
+                        <li>Все курсы без ограничений</li>
+                        <li>Закрытый чат с юристом</li>
+                        <li>Обновления законов 2024-2025</li>
+                        <li>Скачивание чек-листов</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="tg.MainButton.show(); tg.MainButton.setText('Оплатить 990₽');">Выбрать</button>
+                </div>
+                
+                <div class="pricing-card">
+                    <h3>Продвинутый</h3>
+                    <div class="price">2 490 ₽<span>/мес</span></div>
+                    <ul>
+                        <li>Все из Базового</li>
+                        <li>Разбор твоей личной ситуации 1 раз в мес</li>
+                        <li>Приоритет в чате</li>
+                        <li>Шаблоны документов под твой случай</li>
+                    </ul>
+                    <button class="btn btn-outline">Выбрать</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Отзывы -->
+        <section class="testimonials">
+            <h2>Истории, когда знание прав спасло</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial">
+                    <div class="testimonial-header">
+                        <div class="avatar">А</div>
+                        <div>
+                            <div class="name">Аня, 22</div>
+                            <div class="meta">Вернула депозит 40 000 ₽</div>
+                        </div>
+                    </div>
+                    <p>«Хозяин квартиры сказал, что я сама всё поломала. Благодаря чек-листу из курса у меня были фото при заселении. Отстояла каждую копейку.»</p>
+                </div>
+                
+                <div class="testimonial">
+                    <div class="testimonial-header">
+                        <div class="avatar">М</div>
+                        <div>
+                            <div class="name">Макс, 24</div>
+                            <div class="meta">Получил компенсацию при увольнении</div>
+                        </div>
+                    </div>
+                    <p>«HR давила, что «все так делают» и заставила подписать соглашение. Я знал, что мне положены выплаты, и отстоял 3 оклада.»</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="faq">
+            <h2>Вопросы, которые вы задаете в Telegram</h2>
+            <div class="faq-list">
+                <details>
+                    <summary>А это легально? Вы что, юристы?</summary>
+                    <p>Мы не заменяем адвокатов в суде, но научим не платить за то, что не должен. Наша цель — дать тебе базовую правовую грамотность.</p>
+                </details>
+                <details>
+                    <summary>Я ничего не понимаю в праве, сложно ли учиться?</summary>
+                    <p>Именно для этого мы и есть. Мы объясняем на «человечьем» языке с мемами и примерами из TikTok.</p>
+                </details>
+                <details>
+                    <summary>Можно ли отменить подписку?</summary>
+                    <p>Да, в один клик в личном кабинете. Никаких звонков менеджерам.</p>
+                </details>
+            </div>
+        </section>
+    </div>
+
+    <!-- СТРАНИЦА УРОКА (открывается поверх) -->
+    <div id="page-lesson" class="page-overlay">
+        <div class="lesson-container">
+            <button class="back-btn" onclick="closeLesson()">← Назад к библиотеке</button>
+            
+            <div class="lesson-header">
+                <span class="lesson-category" id="lesson-cat">🏠 Аренда</span>
+                <button class="favorite-btn" id="fav-btn" onclick="toggleFavorite()">☆</button>
+            </div>
+            
+            <h1 id="lesson-title">Название урока</h1>
+            
+            <div class="lesson-meta-bar">
+                <span id="lesson-type">📄 Статья</span>
+                <span id="lesson-time">⏱ 5 мин</span>
+                <span class="completed-badge" id="lesson-completed" style="display: none;">✓ Пройдено</span>
+            </div>
+
+            <div class="lesson-content-box" id="lesson-content">
+                <!-- Контент -->
+            </div>
+
+            <div class="lesson-actions">
+                <button class="btn btn-outline" onclick="prevLesson()">← Предыдущий</button>
+                <button class="btn btn-primary" id="mark-complete-btn" onclick="markComplete()">
+                    ✓ Я всё понял
+                </button>
+                <button class="btn btn-outline" onclick="nextLesson()">Следующий →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Футер -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">⚡️ Простое право</div>
+            <p>Знание прав освобождает от неприятностей</p>
+            <div class="social-links">
+                <a href="#" onclick="tg.openTelegramLink('https://t.me/prostoepravo')">Telegram</a>
+                <a href="#">TikTok</a>
+                <a href="#">YouTube</a>
+            </div>
+            <p class="disclaimer">Мы не являемся юридической фирмой и не оказываем юридических услуг в классическом понимании.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
