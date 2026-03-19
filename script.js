@@ -1,388 +1,349 @@
-// script.js — Полноценная логика учебника + TWA
+// script.js — Оригинальная логика + Учебник + TWA
 
-// Инициализация Telegram Web App
-let tg = window.Telegram.WebApp;
-tg.ready();
-tg.expand();
-
-// Настройка цветов под Telegram
-tg.setHeaderColor('#0a0a0a');
-tg.setBackgroundColor('#0a0a0a');
-
-// Данные уроков (в реальном приложении это приходит с API)
-const lessons = [
+// Данные уроков
+const lessonsData = [
     {
         id: 1,
         title: "Как не потерять депозит за квартиру",
         category: "rent",
-        type: "article",
+        categoryName: "🏠 Аренда",
+        type: "📄 Статья",
         duration: "5 мин",
-        icon: "🏠",
         content: `
             <h2>Акт приема-передачи — твой щит</h2>
-            <p>При заселении сфотографируй ВСЕ: стены, окна, бытовую технику, даже розетки. Это доказательства.</p>
+            <p>При заселении сфотографируй ВСЕ: стены, окна, бытовую технику, даже розетки. Это единственные доказательства при выселении.</p>
+            
             <h2>3 красных флага в договоре</h2>
             <ul>
                 <li>Арендодатель отказывается подписывать акт</li>
                 <li>В договоре нет срока возврата депозита</li>
-                <li>Указана «комиссия за уборку»</li>
+                <li>Указана «комиссия за уборку» при выезде</li>
             </ul>
+            
+            <h2>Что делать, если уже подписал</h2>
+            <p>Отправь арендодателю фото с описанием дефектов в мессенджере и сохрани переписку. Это тоже доказательства.</p>
         `,
-        checklist: ["Сфотографировать все до мелочей", "Зафиксировать показания счетчиков", "Подписать акт с арендодателем"],
-        quiz: {
-            question: "Что делать, если арендодатель не подписывает акт приема-передачи?",
-            options: ["Заселиться и не париться", "Отказаться от сделки или сделать фото с геолокацией", "Подписать без него"],
-            correct: 1
-        }
+        isCompleted: false
     },
     {
         id: 2,
         title: "Трудовой договор: где тебя разводят",
         category: "work",
-        type: "video",
+        categoryName: "💼 Работа",
+        type: "📋 Чек-лист",
         duration: "8 мин",
-        icon: "💼",
-        content: "<p>Видео-урок о скрытых пунктах в ТК...</p>",
-        checklist: ["Проверить срок испытательного срока", "Уточнить условия увольнения", "Зафиксировать оклад цифрами"],
-        quiz: null
+        content: `
+            <h2>Проверь эти пункты перед подписанием</h2>
+            <ul>
+                <li>Срок испытательного срока (не более 3 месяцев)</li>
+                <li>Дата выдачи зарплаты (должна быть конкретной цифрой, не «до 10-го»)</li>
+                <li>Условия увольнения (нельзя уволить без объяснения причин)</li>
+            </ul>
+            
+            <h2>Фриланс vs Трудовой договор</h2>
+            <p>Если тебя заставляют оформляться как самозанятого, но ты ходишь в офис 5/2 — это незаконно. Ты должен быть в штате.</p>
+        `,
+        isCompleted: false
     },
     {
         id: 3,
         title: "Коллекторы: как отбиться от звонков",
         category: "money",
-        type: "checklist",
+        categoryName: "💸 Деньги",
+        type: "⚡️ Быстрый гайд",
         duration: "3 мин",
-        icon: "💸",
-        content: "<p>Пошаговая инструкция по защите от коллекторов...</p>",
-        checklist: ["Записать разговор", "Потребовать документы о долге", "Направить заявление о прекращении обработки данных"],
-        quiz: null
+        content: `
+            <h2>Твои действия за 5 минут</h2>
+            <ol>
+                <li>Запиши разговор (законно, если предупредил)</li>
+                <li>Скажи: «Я не подтверждаю долг, пришлите документы»</li>
+                <li>Отправь заявление о прекращении обработки персональных данных</li>
+            </ol>
+            
+            <p><strong>Важно:</strong> Если долг не твой — они обязаны удалить твои данные в течение 30 дней.</p>
+        `,
+        isCompleted: false
     },
     {
         id: 4,
-        title: "Штрафы ГИБДД: что реально надо платить",
-        category: "docs",
-        type: "article",
-        duration: "6 мин",
-        icon: "🚗",
-        content: "<p>Разбираем законные и незаконные штрафы...</p>",
-        checklist: ["Проверить фото нарушения", "Убедиться в подписи инспектора"],
-        quiz: null
+        title: "Подписки: как вернуть деньги",
+        category: "money",
+        categoryName: "💸 Деньги",
+        type: "📄 Статья",
+        duration: "4 мин",
+        content: `
+            <h2>Автопродление — не всегда законно</h2>
+            <p>Если сервис не прислал уведомление о списании за 3 дня — ты можешь оспорить платеж.</p>
+            
+            <h2>Алгоритм возврата</h2>
+            <ul>
+                <li>Напиши в поддержку первым делом</li>
+                <li>Если отказ — обращайся в банк (чарджбэк)</li>
+                <li>Последняя инстанция — Роспотребнадзор</li>
+            </ul>
+        `,
+        isCompleted: false
     }
 ];
 
-// Состояние приложения
+// Состояние
 let currentLessonId = null;
-let completedLessons = JSON.parse(localStorage.getItem('completed') || '[]');
+let completedLessons = JSON.parse(localStorage.getItem('completedLessons') || '[]');
 let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
 
 // Инициализация
 document.addEventListener('DOMContentLoaded', () => {
-    renderFeatured();
-    renderLibrary();
     updateProgress();
+    renderLibrary();
     
-    // Если есть сохраненный прогресс в TG CloudStorage (опционально)
-    if (tg.CloudStorage) {
-        tg.CloudStorage.getItem('progress', (err, value) => {
-            if (!err && value) {
-                completedLessons = JSON.parse(value);
-                updateProgress();
-            }
-        });
-    }
+    // TWA BackButton
+    tg.BackButton.onClick(() => {
+        if (document.getElementById('page-lesson').classList.contains('active')) {
+            closeLesson();
+        } else {
+            tg.BackButton.hide();
+        }
+    });
 });
 
-// Навигация по секциям
-function showSection(sectionName) {
-    // Haptic feedback
-    if (tg.HapticFeedback) {
-        tg.HapticFeedback.impactOccurred('light');
-    }
+// Обновление прогресса
+function updateProgress() {
+    const count = completedLessons.length;
+    document.getElementById('completed-counter').textContent = count;
     
-    // Скрываем все секции
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    
-    // Показываем нужную
-    document.getElementById(`section-${sectionName}`).classList.add('active');
-    
-    // Управление кнопкой "Назад" в Telegram
-    if (sectionName === 'home') {
-        tg.BackButton.hide();
-        tg.MainButton.hide();
-    } else {
-        tg.BackButton.show();
-        tg.BackButton.onClick(() => showSection('home'));
-    }
-    
-    // Специальные кнопки для урока
-    if (sectionName === 'lesson') {
-        tg.MainButton.setText('✓ Я всё понял');
-        tg.MainButton.show();
-        tg.MainButton.onClick(() => markComplete());
-    } else {
-        tg.MainButton.hide();
-    }
-    
-    window.scrollTo(0, 0);
-}
-
-// Рендер популярных уроков
-function renderFeatured() {
-    const container = document.getElementById('featured-grid');
-    const featured = lessons.slice(0, 3);
-    
-    container.innerHTML = featured.map(lesson => createLessonCard(lesson)).join('');
+    // Обновляем карточки
+    document.querySelectorAll('.problem-card').forEach((card, index) => {
+        const lessonId = index + 1;
+        if (completedLessons.includes(lessonId)) {
+            card.classList.add('completed');
+        }
+    });
 }
 
 // Рендер библиотеки
 function renderLibrary(filter = 'all') {
-    const container = document.getElementById('library-grid');
-    let filtered = lessons;
+    const grid = document.getElementById('library-grid');
+    if (!grid) return;
     
+    let lessons = lessonsData;
     if (filter !== 'all') {
-        filtered = lessons.filter(l => l.category === filter || l.type === filter);
+        lessons = lessonsData.filter(l => l.category === filter);
     }
     
-    container.innerHTML = filtered.map(lesson => createLessonCard(lesson)).join('');
-}
-
-// Создание карточки урока
-function createLessonCard(lesson) {
-    const isCompleted = completedLessons.includes(lesson.id);
-    const typeIcon = lesson.type === 'video' ? '🎥' : lesson.type === 'checklist' ? '✅' : '📄';
-    
-    return `
-        <div class="lesson-card ${isCompleted ? 'completed' : ''}" onclick="openLesson(${lesson.id})">
-            <div class="lesson-thumb">
-                ${lesson.icon}
-                <span class="lesson-type-icon">${typeIcon}</span>
-            </div>
-            <div class="lesson-info">
-                <span class="lesson-category-tag">${getCategoryName(lesson.category)}</span>
-                <h3>${lesson.title}</h3>
-                <div class="lesson-meta-card">
-                    <span>⏱ ${lesson.duration}</span>
-                    <span>${isCompleted ? '✓ Пройдено' : 'Новое'}</span>
-                </div>
-            </div>
+    grid.innerHTML = lessons.map(lesson => `
+        <div class="problem-card ${completedLessons.includes(lesson.id) ? 'completed' : ''}" onclick="openLesson(${lesson.id})">
+            <span class="icon">${lesson.categoryName.split(' ')[0]}</span>
+            <span class="lesson-category-tag">${lesson.categoryName}</span>
+            <h3>${lesson.title}</h3>
+            <p>${lesson.type} • ${lesson.duration}</p>
+            <span class="link-arrow">Открыть урок →</span>
         </div>
-    `;
+    `).join('');
 }
 
-// Открытие урока
-function openLesson(id) {
-    currentLessonId = id;
-    const lesson = lessons.find(l => l.id === id);
+// Фильтрация
+function filterLibrary(category) {
+    // Обновляем чипсы
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    event.target.classList.add('active');
     
-    // Заполняем контент
-    document.getElementById('lesson-title').textContent = lesson.title;
-    document.getElementById('lesson-category').textContent = getCategoryName(lesson.category);
-    document.getElementById('lesson-type').textContent = getTypeName(lesson.type);
-    document.getElementById('lesson-time').textContent = lesson.duration;
-    document.getElementById('lesson-content').innerHTML = lesson.content;
-    
-    // Показываем/скрываем видео
-    const videoContainer = document.getElementById('video-container');
-    videoContainer.style.display = lesson.type === 'video' ? 'block' : 'none';
-    
-    // Чек-лист
-    const checklistSection = document.getElementById('checklist-section');
-    if (lesson.checklist) {
-        checklistSection.style.display = 'block';
-        document.getElementById('checklist-items').innerHTML = 
-            lesson.checklist.map(item => `<li>${item}</li>`).join('');
-    } else {
-        checklistSection.style.display = 'none';
-    }
-    
-    // Кнопка избранного
-    updateFavoriteBtn();
-    
-    // Показываем секцию
-    showSection('lesson');
+    renderLibrary(category);
     
     // Haptic
-    tg.HapticFeedback.impactOccurred('medium');
+    if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+}
+
+// Открыть урок
+function openLesson(id) {
+    currentLessonId = id;
+    const lesson = lessonsData.find(l => l.id === id);
+    
+    document.getElementById('lesson-title').textContent = lesson.title;
+    document.getElementById('lesson-cat').textContent = lesson.categoryName;
+    document.getElementById('lesson-type').textContent = lesson.type;
+    document.getElementById('lesson-time').textContent = '⏱ ' + lesson.duration;
+    document.getElementById('lesson-content').innerHTML = lesson.content;
+    
+    // Показываем "Пройдено" если нужно
+    const completedBadge = document.getElementById('lesson-completed');
+    const completeBtn = document.getElementById('mark-complete-btn');
+    
+    if (completedLessons.includes(id)) {
+        completedBadge.style.display = 'inline';
+        completeBtn.textContent = '✓ Уже пройдено';
+        completeBtn.style.opacity = '0.6';
+    } else {
+        completedBadge.style.display = 'none';
+        completeBtn.textContent = '✓ Я всё понял';
+        completeBtn.style.opacity = '1';
+    }
+    
+    // Избранное
+    const favBtn = document.getElementById('fav-btn');
+    if (favorites.includes(id)) {
+        favBtn.classList.add('active');
+        favBtn.textContent = '★';
+    } else {
+        favBtn.classList.remove('active');
+        favBtn.textContent = '☆';
+    }
+    
+    // Показываем страницу
+    document.getElementById('page-lesson').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // TWA
+    tg.BackButton.show();
+    if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+    
+    window.scrollTo(0, 0);
+}
+
+// Закрыть урок
+function closeLesson() {
+    document.getElementById('page-lesson').classList.remove('active');
+    document.body.style.overflow = '';
+    tg.BackButton.hide();
 }
 
 // Отметить как пройденное
 function markComplete() {
     if (!completedLessons.includes(currentLessonId)) {
         completedLessons.push(currentLessonId);
-        localStorage.setItem('completed', JSON.stringify(completedLessons));
+        localStorage.setItem('completedLessons', JSON.stringify(completedLessons));
         
-        // Сохраняем в облако TG если доступно
-        if (tg.CloudStorage) {
-            tg.CloudStorage.setItem('progress', JSON.stringify(completedLessons));
-        }
+        // Анимация кнопки
+        const btn = document.getElementById('mark-complete-btn');
+        btn.textContent = '✓ Сохранено!';
+        btn.style.background = 'var(--accent)';
+        btn.style.color = 'var(--bg)';
         
-        // Уведомление
+        // Haptic
+        if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+        
+        // Показываем попап TG
         tg.showPopup({
-            title: '✅ Урок пройден!',
-            message: 'Ты стал на шаг ближе к юридической грамотности',
+            title: 'Урок пройден! 🎉',
+            message: 'Ты на шаг ближе к защите своих прав',
             buttons: [{type: 'ok'}]
         });
         
-        tg.HapticFeedback.notificationOccurred('success');
         updateProgress();
-        renderLibrary(); // Обновить галочки
-    }
-    
-    showSection('library');
-}
-
-// Прогресс обучения
-function updateProgress() {
-    const total = lessons.length;
-    const completed = completedLessons.length;
-    const percent = Math.round((completed / total) * 100);
-    
-    document.getElementById('completed-count').textContent = completed;
-    document.getElementById('completed-total').textContent = completed;
-    document.getElementById('total-lessons').textContent = total;
-    document.getElementById('progress-text').textContent = percent + '%';
-    
-    // Обновляем круг прогресса
-    const circle = document.getElementById('progress-ring');
-    const dashArray = (percent / 100) * 100;
-    circle.style.strokeDasharray = `${dashArray}, 100`;
-    
-    // Обновляем MainButton на главной
-    if (completed === 0) {
-        tg.MainButton.setText('Начать обучение');
-    } else {
-        tg.MainButton.setText(`Продолжить (${percent}%)`);
-    }
-}
-
-// Продолжить обучение (с последнего непройденного)
-function continueLearning() {
-    const nextLesson = lessons.find(l => !completedLessons.includes(l.id));
-    if (nextLesson) {
-        openLesson(nextLesson.id);
-    } else {
-        tg.showAlert('🎉 Ты прошел все уроки! Теперь ты юридически подкован.');
+        renderLibrary();
+        
+        setTimeout(() => {
+            closeLesson();
+        }, 1000);
     }
 }
 
 // Избранное
 function toggleFavorite() {
+    const btn = document.getElementById('fav-btn');
+    
     if (favorites.includes(currentLessonId)) {
         favorites = favorites.filter(id => id !== currentLessonId);
-        tg.HapticFeedback.impactOccurred('light');
-    } else {
-        favorites.push(currentLessonId);
-        tg.HapticFeedback.notificationOccurred('success');
-    }
-    localStorage.setItem('favorites', JSON.stringify(favorites));
-    updateFavoriteBtn();
-}
-
-function updateFavoriteBtn() {
-    const btn = document.getElementById('fav-btn');
-    if (favorites.includes(currentLessonId)) {
-        btn.classList.add('active');
-        btn.textContent = '★';
-    } else {
         btn.classList.remove('active');
         btn.textContent = '☆';
+        if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+    } else {
+        favorites.push(currentLessonId);
+        btn.classList.add('active');
+        btn.textContent = '★';
+        if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
     }
-}
-
-// Фильтры и поиск
-function filterByCategory(category) {
-    // Обновляем активный чип
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-    event.target.classList.add('active');
     
-    renderLibrary(category === 'all' ? 'all' : category);
-    tg.HapticFeedback.impactOccurred('light');
-}
-
-function searchLessons(query) {
-    const container = document.getElementById('library-grid');
-    const filtered = lessons.filter(l => 
-        l.title.toLowerCase().includes(query.toLowerCase()) ||
-        l.category.includes(query.toLowerCase())
-    );
-    
-    container.innerHTML = filtered.map(lesson => createLessonCard(lesson)).join('');
-}
-
-// Вспомогательные функции
-function getCategoryName(cat) {
-    const map = {
-        'rent': '🏠 Аренда',
-        'work': '💼 Работа',
-        'money': '💸 Деньги',
-        'docs': '📝 Документы'
-    };
-    return map[cat] || cat;
-}
-
-function getTypeName(type) {
-    const map = {
-        'video': '🎥 Видео',
-        'article': '📄 Статья',
-        'checklist': '✅ Чек-лист'
-    };
-    return map[type] || type;
+    localStorage.setItem('favorites', JSON.stringify(favorites));
 }
 
 // Навигация между уроками
 function nextLesson() {
-    const currentIndex = lessons.findIndex(l => l.id === currentLessonId);
-    if (currentIndex < lessons.length - 1) {
-        openLesson(lessons[currentIndex + 1].id);
+    const currentIndex = lessonsData.findIndex(l => l.id === currentLessonId);
+    if (currentIndex < lessonsData.length - 1) {
+        openLesson(lessonsData[currentIndex + 1].id);
+    } else {
+        tg.showAlert('Это последний урок! 🎉');
     }
 }
 
 function prevLesson() {
-    const currentIndex = lessons.findIndex(l => l.id === currentLessonId);
+    const currentIndex = lessonsData.findIndex(l => l.id === currentLessonId);
     if (currentIndex > 0) {
-        openLesson(lessons[currentIndex - 1].id);
+        openLesson(lessonsData[currentIndex - 1].id);
+    }
+}
+
+// Продолжить обучение
+function continueLearning() {
+    const nextId = lessonsData.find(l => !completedLessons.includes(l.id))?.id;
+    if (nextId) {
+        openLesson(nextId);
+    } else {
+        tg.showAlert('Ты прошел все уроки! Можешь перейти к платным курсам.');
+    }
+}
+
+// Переключение страниц (для навигации)
+function showPage(page) {
+    if (page === 'library') {
+        document.getElementById('library').scrollIntoView({behavior: 'smooth'});
+    } else if (page === 'home') {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+    
+    if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+}
+
+// Квиз (оригинальный)
+let score = 0;
+function answer(question, isCorrect) {
+    if (isCorrect) score++;
+    
+    document.querySelector(`[data-question="${question}"]`).classList.remove('active');
+    
+    if (question < 3) {
+        document.querySelector(`[data-question="${question + 1}"]`).classList.add('active');
+    } else {
+        showResult();
+    }
+    
+    if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+}
+
+function showResult() {
+    const resultDiv = document.getElementById('quiz-result');
+    const title = document.getElementById('result-title');
+    const text = document.getElementById('result-text');
+    
+    resultDiv.classList.add('show');
+    
+    if (score === 3) {
+        title.textContent = '🔥 Ты юридически подкован!';
+        text.textContent = 'Ты разбираешься в базовых ситуациях лучше 80% населения.';
+    } else if (score === 2) {
+        title.textContent = '⚡️ Неплохо, но есть пробелы';
+        text.textContent = 'Рекомендуем пройти базовый курс.';
+    } else {
+        title.textContent = '📚 Пора учиться';
+        text.textContent = 'Начни с бесплатного раздела SOS.';
     }
 }
 
 // Мобильное меню
-function toggleMenu() {
-    document.getElementById('mobile-menu').classList.toggle('show');
+function toggleMobileMenu() {
+    // Простая реализация - можно расширить
+    tg.showAlert('Меню: используй прокрутку для навигации');
 }
 
-function goBack() {
-    showSection('home');
-}
-
-// Воспроизведение видео (заглушка)
-function playVideo() {
-    tg.showAlert('▶️ Воспроизведение видео...');
-    tg.HapticFeedback.impactOccurred('medium');
-}
-
-// Обработка свайпов (для мобильных)
-let touchStartX = 0;
-let touchEndX = 0;
-
+// Свайпы для мобильных
+let touchStartY = 0;
 document.addEventListener('touchstart', e => {
-    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
 });
 
 document.addEventListener('touchend', e => {
-    touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
+    const touchEndY = e.changedTouches[0].screenY;
+    if (touchStartY - touchEndY > 100) {
+        // Свайп вверх - можно добавить логику
+    }
 });
-
-function handleSwipe() {
-    if (touchEndX < touchStartX - 100) {
-        // Свайп влево - следующий урок (если в уроке)
-        if (document.getElementById('section-lesson').classList.contains('active')) {
-            nextLesson();
-        }
-    }
-    if (touchEndX > touchStartX + 100) {
-        // Свайп вправо - назад
-        if (!document.getElementById('section-home').classList.contains('active')) {
-            goBack();
-        }
-    }
-}
