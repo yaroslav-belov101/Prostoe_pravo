@@ -1,12 +1,11 @@
 // ============================================
 // ПЛАТЕЖИ И ПОДПИСКИ
 // ============================================
-
 const Payments = {
     currentPlan: null,
     currentAmount: 0,
-    
-    // Инициализация оплаты
+    boundHandlePayment: null,
+
     init(amount, plan) {
         this.currentAmount = amount;
         this.currentPlan = plan;
@@ -15,8 +14,7 @@ const Payments = {
             this.showDesktopPayment();
             return;
         }
-        
-        // Показываем MainButton в TWA
+
         const TWA = window.Telegram.WebApp;
         
         TWA.MainButton.setText(`Оплатить ${Utils.formatNumber(amount)}₽`);
@@ -26,37 +24,40 @@ const Payments = {
             is_active: true,
             is_visible: true
         });
+
+        // ✅ ИСПРАВЛЕНО: Сохраняем ссылку на обработчик
+        if (this.boundHandlePayment) {
+            TWA.MainButton.offClick(this.boundHandlePayment);
+        }
         
-        // Удаляем старый обработчик если есть
-        TWA.MainButton.offClick(this.handlePayment);
-        
-        // Добавляем новый
-        TWA.MainButton.onClick(() => this.handlePayment());
+        this.boundHandlePayment = this.handlePayment.bind(this);
+        TWA.MainButton.onClick(this.boundHandlePayment);
         
         Utils.haptic('medium');
     },
-    
-    // Обработка платежа
+
     handlePayment() {
         const TWA = window.Telegram.WebApp;
         
-        // Здесь должна быть интеграция с вашим бэкендом
-        // Пример с Telegram Stars или внешней платёжкой:
+        // ✅ ИСПРАВЛЕНО: Правильная работа с invoice
+        const invoiceUrl = `https://api.yoursite.com/create-invoice?amount=${this.currentAmount}&plan=${this.currentPlan}&user_id=${TWA.initDataUnsafe?.user?.id}`;
         
-        TWA.openInvoice({
-            url: `https://api.yoursite.com/create-invoice?amount=${this.currentAmount}&plan=${this.currentPlan}&user_id=${TWA.initDataUnsafe?.user?.id}`
-        }, (status) => {
+        // Подписываемся на событие закрытия invoice
+        const onInvoiceClosed = (invoice) => {
             TWA.MainButton.hide();
+            TWA.offEvent('invoiceClosed', onInvoiceClosed);
             
-            if (status === 'paid') {
+            if (invoice.status === 'paid') {
                 this.onSuccess();
             } else {
                 this.onCancel();
             }
-        });
+        };
+        
+        TWA.onEvent('invoiceClosed', onInvoiceClosed);
+        TWA.openInvoice(invoiceUrl);
     },
-    
-    // Успешная оплата
+
     onSuccess() {
         State.addXP(CONFIG.XP.PURCHASE);
         
@@ -68,7 +69,6 @@ const Payments = {
         
         Utils.haptic('success');
         
-        // Сохраняем статус подписки
         State.data.subscription = {
             plan: this.currentPlan,
             active: true,
@@ -76,15 +76,12 @@ const Payments = {
         };
         State.save();
     },
-    
-    // Отмена оплаты
+
     onCancel() {
         Utils.toast('Оплата отменена');
     },
-    
-    // Показать десктопную версию оплаты
+
     showDesktopPayment() {
-        // На ПК показываем модальное окно с инструкцией
         const modal = document.createElement('div');
         modal.className = 'modal-overlay active';
         modal.innerHTML = `
@@ -102,8 +99,7 @@ const Payments = {
         `;
         document.body.appendChild(modal);
     },
-    
-    // Проверка статуса подписки
+
     hasActiveSubscription() {
         return State.data.subscription?.active === true;
     }

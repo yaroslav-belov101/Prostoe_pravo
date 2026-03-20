@@ -134,10 +134,10 @@
             <p class="section-subtitle">Выбери тему и изучи за 15 минут</p>
             
             <div class="category-chips">
-                <button class="chip active" onclick="UI.filterLibrary('all')">Все</button>
-                <button class="chip" onclick="UI.filterLibrary('rent')">🏠 Аренда</button>
-                <button class="chip" onclick="UI.filterLibrary('work')">💼 Работа</button>
-                <button class="chip" onclick="UI.filterLibrary('money')">💸 Деньги</button>
+                <button class="chip active" onclick="UI.filterLibrary('all', event)">Все</button>
+                <button class="chip" onclick="UI.filterLibrary('rent', event)">🏠 Аренда</button>
+                <button class="chip" onclick="UI.filterLibrary('work', event)">💼 Работа</button>
+                <button class="chip" onclick="UI.filterLibrary('money', event)">💸 Деньги</button>
             </div>
 
             <div class="problem-grid" id="library-grid">
@@ -239,7 +239,6 @@
                 </div>
                 
                 <div class="pricing-card popular">
-                    <div class="badge-popular">Выбор зумеров</div>
                     <h3>Базовый</h3>
                     <div class="price">990 ₽<span>/мес</span></div>
                     <ul>
