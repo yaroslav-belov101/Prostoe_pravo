@@ -1,14 +1,26 @@
-style.css — Оригинальный стиль + дополнения для учебника
+/* ============================================
+   ПЕРЕМЕННЫЕ И БАЗОВЫЕ СТИЛИ
+   ============================================ */
 
 :root {
-    --bg: var(--tg-theme-bg-color, #0a0a0a);
-    --text: var(--tg-theme-text-color, #f5f5f5);
-    --accent: var(--tg-theme-button-color, #00ff88);
+    --bg: #0a0a0a;
+    --text: #f5f5f5;
+    --accent: #00ff88;
     --accent-hover: #00cc6a;
+    --accent-rgb: 0, 255, 136;
     --card-bg: #1a1a1a;
     --card-hover: #252525;
     --gray: #888;
     --border: #333;
+    --danger: #ff4444;
+    --warning: #ffaa00;
+    
+    /* TWA переменные */
+    --tg-viewport-height: 100vh;
+    --tg-theme-bg-color: #0a0a0a;
+    --tg-theme-text-color: #f5f5f5;
+    --tg-theme-button-color: #00ff88;
+    --tg-theme-button-text-color: #0a0a0a;
 }
 
 * {
@@ -19,6 +31,7 @@ style.css — Оригинальный стиль + дополнения для 
 
 html {
     scroll-behavior: smooth;
+    font-size: 16px;
 }
 
 body {
@@ -27,14 +40,18 @@ body {
     color: var(--text);
     line-height: 1.6;
     overflow-x: hidden;
+    min-height: 100vh;
 }
 
-/* Навигация */
+/* ============================================
+   НАВИГАЦИЯ
+   ============================================ */
+
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem 5%;
+    padding: 1rem 5%;
     position: fixed;
     width: 100%;
     top: 0;
@@ -49,6 +66,11 @@ body {
     font-size: 1.5rem;
     color: var(--accent);
     cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.logo:hover {
+    opacity: 0.8;
 }
 
 .nav-links {
@@ -63,10 +85,51 @@ body {
     font-weight: 500;
     transition: color 0.3s;
     font-size: 0.95rem;
+    position: relative;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent);
+    transition: width 0.3s;
 }
 
 .nav-links a:hover {
     color: var(--accent);
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+/* Мини-статистика в навбаре */
+.user-mini-stats {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-left: auto;
+    margin-right: 1rem;
+}
+
+.level-badge {
+    background: rgba(var(--accent-rgb), 0.1);
+    color: var(--accent);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid var(--accent);
+}
+
+.xp-badge {
+    color: var(--gray);
+    font-size: 0.85rem;
+    font-weight: 500;
 }
 
 .mobile-menu-btn {
@@ -76,9 +139,108 @@ body {
     color: var(--text);
     font-size: 1.5rem;
     cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: background 0.3s;
 }
 
-/* Hero Section */
+.mobile-menu-btn:hover {
+    background: var(--card-bg);
+}
+
+/* Мобильное меню */
+.mobile-menu {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(10, 10, 10, 0.98);
+    z-index: 2000;
+    padding: 2rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.mobile-menu.active {
+    display: flex;
+    animation: fadeIn 0.3s;
+}
+
+.mobile-menu-close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 1.5rem;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.3s;
+}
+
+.mobile-menu-close:hover {
+    background: var(--card-bg);
+}
+
+.mobile-menu ul {
+    list-style: none;
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.mobile-menu li {
+    margin: 1.5rem 0;
+}
+
+.mobile-menu a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.mobile-menu a:hover {
+    color: var(--accent);
+}
+
+.mobile-user-stats {
+    display: flex;
+    gap: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+}
+
+.mobile-user-stats .stat-item {
+    text-align: center;
+}
+
+.mobile-user-stats .stat-label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--gray);
+    margin-bottom: 0.25rem;
+}
+
+.mobile-user-stats .stat-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+
 .hero {
     margin-top: 80px;
     padding: 4rem 5% 6rem;
@@ -90,12 +252,13 @@ body {
 
 .hero-content {
     max-width: 800px;
+    width: 100%;
 }
 
 .badge {
     display: inline-block;
     padding: 0.5rem 1rem;
-    background: rgba(0, 255, 136, 0.1);
+    background: rgba(var(--accent-rgb), 0.1);
     border: 1px solid var(--accent);
     color: var(--accent);
     border-radius: 50px;
@@ -125,7 +288,7 @@ body {
     left: 0;
     width: 100%;
     height: 30%;
-    background: rgba(0, 255, 136, 0.2);
+    background: rgba(var(--accent-rgb), 0.2);
     z-index: -1;
     transform: skewX(-10deg);
 }
@@ -138,6 +301,92 @@ body {
     line-height: 1.6;
 }
 
+/* Карточка статистики пользователя */
+.user-stats-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    max-width: 500px;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-block {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.stat-icon {
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(var(--accent-rgb), 0.1);
+    border-radius: 10px;
+}
+
+.stat-info .stat-label {
+    font-size: 0.75rem;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.stat-info .stat-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.progress-section {
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+}
+
+.progress-label {
+    font-size: 0.85rem;
+    color: var(--gray);
+    margin-bottom: 0.5rem;
+}
+
+.progress-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+    width: 0%;
+}
+
+.progress-text {
+    font-size: 0.85rem;
+    color: var(--gray);
+    white-space: nowrap;
+}
+
 .hero-buttons {
     display: flex;
     gap: 1rem;
@@ -145,7 +394,18 @@ body {
     margin-bottom: 3rem;
 }
 
-/* Кнопки */
+.trust-badges {
+    display: flex;
+    gap: 2rem;
+    color: var(--gray);
+    font-size: 0.9rem;
+    flex-wrap: wrap;
+}
+
+/* ============================================
+   КНОПКИ
+   ============================================ */
+
 .btn {
     padding: 1rem 2rem;
     border-radius: 12px;
@@ -153,12 +413,20 @@ body {
     text-decoration: none;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
     transition: all 0.3s;
     border: none;
     cursor: pointer;
     font-size: 1rem;
     font-family: inherit;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .btn-primary {
@@ -166,10 +434,10 @@ body {
     color: var(--bg);
 }
 
-.btn-primary:hover {
+.btn-primary:hover:not(:disabled) {
     background: var(--accent-hover);
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+    box-shadow: 0 10px 30px rgba(var(--accent-rgb), 0.3);
 }
 
 .btn-secondary {
@@ -194,15 +462,10 @@ body {
     color: var(--accent);
 }
 
-.trust-badges {
-    display: flex;
-    gap: 2rem;
-    color: var(--gray);
-    font-size: 0.9rem;
-    flex-wrap: wrap;
-}
+/* ============================================
+   СЕКЦИИ
+   ============================================ */
 
-/* Секции */
 section {
     padding: 5rem 5%;
     max-width: 1200px;
@@ -221,7 +484,10 @@ h2 {
     margin-bottom: 2rem;
 }
 
-/* Чипсы категорий */
+/* ============================================
+   ЧИПСЫ КАТЕГОРИЙ
+   ============================================ */
+
 .category-chips {
     display: flex;
     gap: 0.75rem;
@@ -248,7 +514,10 @@ h2 {
     border-color: var(--accent);
 }
 
-/* Блок проблем и библиотеки */
+/* ============================================
+   СЕТКА КАРТОЧЕК
+   ============================================ */
+
 .problem-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -258,7 +527,7 @@ h2 {
 
 .problem-card {
     background: var(--card-bg);
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: 16px;
     border: 1px solid var(--border);
     transition: all 0.3s;
@@ -271,6 +540,7 @@ h2 {
     transform: translateY(-5px);
     border-color: var(--accent);
     background: var(--card-hover);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
 }
 
 .problem-card.urgent::before {
@@ -278,7 +548,7 @@ h2 {
     position: absolute;
     top: 1rem;
     right: -2rem;
-    background: #ff4444;
+    background: var(--danger);
     color: white;
     padding: 0.25rem 3rem;
     font-size: 0.7rem;
@@ -288,7 +558,6 @@ h2 {
 
 .problem-card.completed {
     border-color: var(--accent);
-    opacity: 0.9;
 }
 
 .problem-card.completed::after {
@@ -308,32 +577,77 @@ h2 {
     font-size: 1rem;
 }
 
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
 .problem-card .icon {
     font-size: 2rem;
-    margin-bottom: 1rem;
     display: block;
 }
 
+.fav-icon {
+    color: var(--danger);
+    font-size: 1.2rem;
+}
+
+.lesson-category-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    color: var(--accent);
+    background: rgba(var(--accent-rgb), 0.1);
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
 .problem-card h3 {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     margin-bottom: 0.75rem;
     color: var(--text);
+    line-height: 1.3;
 }
 
 .problem-card p {
     color: var(--gray);
-    font-size: 0.95rem;
-    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
     line-height: 1.5;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
 }
 
 .link-arrow {
     color: var(--accent);
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
 }
 
-/* Форматы */
+.completed-check {
+    background: var(--accent);
+    color: var(--bg);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+/* ============================================
+   ФОРМАТЫ
+   ============================================ */
+
 .formats {
     background: linear-gradient(to bottom, var(--bg), #111);
 }
@@ -346,7 +660,7 @@ h2 {
 
 .format-card {
     background: var(--card-bg);
-    padding: 2.5rem;
+    padding: 2rem;
     border-radius: 20px;
     border: 1px solid var(--border);
     position: relative;
@@ -360,7 +674,7 @@ h2 {
 
 .format-card.highlight {
     border-color: var(--accent);
-    background: linear-gradient(135deg, var(--card-bg), rgba(0, 255, 136, 0.05));
+    background: linear-gradient(135deg, var(--card-bg), rgba(var(--accent-rgb), 0.05));
 }
 
 .format-icon {
@@ -369,7 +683,7 @@ h2 {
 }
 
 .format-card h3 {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     margin-bottom: 1rem;
 }
 
@@ -385,7 +699,10 @@ h2 {
     font-weight: 700;
 }
 
-/* Квиз */
+/* ============================================
+   КВИЗ
+   ============================================ */
+
 .quiz-section {
     background: var(--card-bg);
     margin: 4rem auto;
@@ -413,6 +730,7 @@ h2 {
     font-size: 1.25rem;
     margin-bottom: 2rem;
     font-weight: 600;
+    line-height: 1.4;
 }
 
 .quiz-options {
@@ -436,7 +754,7 @@ h2 {
 
 .quiz-btn:hover {
     border-color: var(--accent);
-    background: rgba(0, 255, 136, 0.1);
+    background: rgba(var(--accent-rgb), 0.1);
 }
 
 .quiz-result {
@@ -452,21 +770,26 @@ h2 {
     animation: fadeIn 0.5s;
 }
 
-/* Тарифы */
+/* ============================================
+   ТАРИФЫ
+   ============================================ */
+
 .pricing-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
     align-items: start;
 }
 
 .pricing-card {
     background: var(--card-bg);
-    padding: 2.5rem;
+    padding: 2rem;
     border-radius: 20px;
     border: 1px solid var(--border);
     position: relative;
     transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
 }
 
 .pricing-card:hover {
@@ -475,11 +798,11 @@ h2 {
 
 .pricing-card.popular {
     border-color: var(--accent);
-    transform: scale(1.05);
+    transform: scale(1.02);
 }
 
 .pricing-card.popular:hover {
-    transform: scale(1.05) translateY(-5px);
+    transform: scale(1.02) translateY(-5px);
 }
 
 .badge-popular {
@@ -493,6 +816,7 @@ h2 {
     border-radius: 20px;
     font-weight: 700;
     font-size: 0.85rem;
+    white-space: nowrap;
 }
 
 .pricing-card h3 {
@@ -504,7 +828,7 @@ h2 {
     font-size: 2.5rem;
     font-weight: 800;
     color: var(--accent);
-    margin: 1.5rem 0;
+    margin: 1rem 0;
 }
 
 .price span {
@@ -515,14 +839,15 @@ h2 {
 
 .pricing-card ul {
     list-style: none;
-    margin: 2rem 0;
-    text-align: left;
+    margin: 1.5rem 0;
+    flex: 1;
 }
 
 .pricing-card li {
     padding: 0.75rem 0;
     border-bottom: 1px solid var(--border);
     color: var(--gray);
+    font-size: 0.95rem;
 }
 
 .pricing-card li:before {
@@ -531,7 +856,15 @@ h2 {
     font-weight: bold;
 }
 
-/* Отзывы */
+.pricing-card .btn {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+/* ============================================
+   ОТЗЫВЫ
+   ============================================ */
+
 .testimonials {
     background: linear-gradient(to bottom, var(--bg), #0f0f0f);
 }
@@ -545,7 +878,7 @@ h2 {
 
 .testimonial {
     background: var(--card-bg);
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: 16px;
     border: 1px solid var(--border);
 }
@@ -554,7 +887,7 @@ h2 {
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .avatar {
@@ -584,9 +917,13 @@ h2 {
     color: var(--gray);
     font-style: italic;
     line-height: 1.6;
+    font-size: 0.95rem;
 }
 
-/* FAQ */
+/* ============================================
+   FAQ
+   ============================================ */
+
 .faq-list {
     max-width: 800px;
     margin-top: 3rem;
@@ -599,6 +936,11 @@ details {
     border-radius: 12px;
     border: 1px solid var(--border);
     cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+details:hover {
+    border-color: var(--accent);
 }
 
 summary {
@@ -627,9 +969,13 @@ details p {
     color: var(--gray);
     padding-top: 1rem;
     border-top: 1px solid var(--border);
+    line-height: 1.6;
 }
 
-/* Футер */
+/* ============================================
+   ФУТЕР
+   ============================================ */
+
 footer {
     background: #050505;
     padding: 4rem 5%;
@@ -668,9 +1014,13 @@ footer {
     color: #555;
     max-width: 600px;
     margin: 2rem auto 0;
+    line-height: 1.5;
 }
 
-/* СТРАНИЦА УРОКА (Оверлей) */
+/* ============================================
+   СТРАНИЦА УРОКА (ОВЕРЛЕЙ)
+   ============================================ */
+
 .page-overlay {
     display: none;
     position: fixed;
@@ -688,11 +1038,6 @@ footer {
     display: block;
 }
 
-@keyframes slideUp {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
-}
-
 .lesson-container {
     max-width: 800px;
     margin: 0 auto;
@@ -706,10 +1051,18 @@ footer {
     font-size: 1rem;
     cursor: pointer;
     margin-bottom: 2rem;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     font-family: inherit;
+    padding: 0.5rem;
+    margin-left: -0.5rem;
+    border-radius: 8px;
+    transition: background 0.3s;
+}
+
+.back-btn:hover {
+    background: rgba(var(--accent-rgb), 0.1);
 }
 
 .lesson-header {
@@ -717,6 +1070,8 @@ footer {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .lesson-category {
@@ -727,32 +1082,54 @@ footer {
     letter-spacing: 0.05em;
 }
 
-.favorite-btn {
+.lesson-actions-header {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.favorite-btn, .share-btn {
     background: none;
     border: none;
     color: var(--gray);
     font-size: 1.5rem;
     cursor: pointer;
-    transition: color 0.3s;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+.favorite-btn:hover, .share-btn:hover {
+    background: var(--card-bg);
+    color: var(--text);
 }
 
 .favorite-btn.active {
-    color: #ff4444;
+    color: var(--danger);
 }
 
 .lesson-container h1 {
-    font-size: 2.5rem;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
     margin-bottom: 1.5rem;
     line-height: 1.2;
 }
 
 .lesson-meta-bar {
     display: flex;
-    gap: 2rem;
+    gap: 1.5rem;
     color: var(--gray);
-    margin-bottom: 3rem;
-    padding-bottom: 2rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
     border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+}
+
+.lesson-meta-bar .xp-badge {
+    color: var(--accent);
+    font-weight: 600;
 }
 
 .completed-badge {
@@ -760,27 +1137,33 @@ footer {
     font-weight: 600;
 }
 
+.lesson-content-wrapper {
+    position: relative;
+}
+
 .lesson-content-box {
     background: var(--card-bg);
-    padding: 2.5rem;
+    padding: 2rem;
     border-radius: 20px;
     border: 1px solid var(--border);
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
     line-height: 1.8;
     color: var(--gray);
+    max-height: 60vh;
+    overflow-y: auto;
 }
 
 .lesson-content-box h2 {
     color: var(--text);
-    font-size: 1.5rem;
-    margin: 2rem 0 1rem;
+    font-size: 1.3rem;
+    margin: 1.5rem 0 1rem;
 }
 
 .lesson-content-box h2:first-child {
     margin-top: 0;
 }
 
-.lesson-content-box ul {
+.lesson-content-box ul, .lesson-content-box ol {
     margin: 1rem 0;
     padding-left: 1.5rem;
 }
@@ -789,105 +1172,102 @@ footer {
     margin-bottom: 0.5rem;
 }
 
+.lesson-navigation-hint {
+    text-align: center;
+    color: var(--gray);
+    font-size: 0.85rem;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1rem;
+}
+
+.swipe-hint {
+    display: none;
+}
+
+.scroll-hint {
+    display: block;
+}
+
 .lesson-actions {
     display: flex;
     justify-content: space-between;
     gap: 1rem;
     flex-wrap: wrap;
+    position: sticky;
+    bottom: 0;
+    background: var(--bg);
+    padding: 1rem 0;
 }
 
-/* Анимации */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+.btn-nav {
+    flex: 1;
+    min-width: 120px;
 }
 
-/* Мобильная адаптация */
+.btn-complete {
+    flex: 2;
+    min-width: 200px;
+}
+
+/* ============================================
+   ПРОГРЕСС ЧТЕНИЯ
+   ============================================ */
+
+.reading-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: transparent;
+    z-index: 3000;
+    pointer-events: none;
+}
+
+.reading-progress-bar {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.1s;
+    box-shadow: 0 0 10px var(--accent);
+}
+
+/* ============================================
+   TOAST УВЕДОМЛЕНИЯ
+   ============================================ */
+
+.toast-container {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    pointer-events: none;
+}
+
+.toast {
+    background: var(--card-bg);
+    color: var(--text);
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--accent);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.3s, fadeOut 0.3s 2.7s;
+    pointer-events: auto;
+    max-width: 90vw;
+}
+
+/* ============================================
+   АДАПТИВНОСТЬ
+   ============================================ */
+
 @media (max-width: 768px) {
-    .nav-links.mobile-open {
-        display: flex;
-        flex-direction: column;
-        position: fixed;
-        top: 70px;
-        left: 0;
-        right: 0;
-        background: var(--card-bg);
-        padding: 1rem;
-        z-index: 999;
-    }
-
-    .nav-links.mobile-open {
-        display: flex;
-        flex-direction: column;
-        position: fixed;
-        top: 70px;
-        left: 5%;
-        right: 5%;
-        background: var(--card-bg);
-        padding: 1rem;
-        border-radius: 12px;
-        border: 1px solid var(--border);
-        z-index: 999;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-    }
-
-    /* Анимация кнопки */
-    .pulse {
-        animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-    }
-
-    /* Tip boxes */
-    .tip-box, .warning-box {
-        padding: 1rem;
-        border-radius: 8px;
-        margin: 1.5rem 0;
-        border-left: 4px solid var(--accent);
-        background: rgba(0, 255, 136, 0.05);
-    }
-
-    .warning-box {
-        border-left-color: #ff4444;
-        background: rgba(255, 68, 68, 0.05);
-    }
-
-    /* Card improvements */
-    .card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 0.5rem;
-    }
-
-    .fav-icon {
-        color: #ff4444;
-        font-size: 1.2rem;
-    }
-
-    .card-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 1rem;
-    }
-
-    .completed-check {
-        background: var(--accent);
-        color: var(--bg);
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.8rem;
-    }
-
-    .nav-links {
+    .nav-links, .user-mini-stats {
         display: none;
     }
     
@@ -896,11 +1276,29 @@ footer {
     }
     
     .hero {
-        padding-top: 6rem;
+        padding-top: 5rem;
+        min-height: auto;
     }
     
     .hero h1 {
         font-size: 2rem;
+    }
+    
+    .user-stats-card {
+        max-width: 100%;
+    }
+    
+    .stat-row {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+    }
+    
+    .hero-buttons .btn {
+        width: 100%;
     }
     
     .pricing-card.popular {
@@ -916,12 +1314,17 @@ footer {
         margin: 2rem 1rem;
     }
     
+    .lesson-container {
+        padding-top: 5rem;
+    }
+    
     .lesson-container h1 {
-        font-size: 1.75rem;
+        font-size: 1.5rem;
     }
     
     .lesson-content-box {
-        padding: 1.5rem;
+        padding: 1.25rem;
+        max-height: 50vh;
     }
     
     .lesson-actions {
@@ -930,6 +1333,51 @@ footer {
     
     .lesson-actions .btn {
         width: 100%;
-        justify-content: center;
+    }
+    
+    .btn-nav {
+        order: 2;
+    }
+    
+    .btn-complete {
+        order: 1;
+    }
+    
+    .swipe-hint {
+        display: block;
+    }
+    
+    .scroll-hint {
+        display: none;
+    }
+    
+    section {
+        padding: 3rem 5%;
+    }
+    
+    h2 {
+        font-size: 1.75rem;
+    }
+}
+
+/* Для очень маленьких экранов */
+@media (max-width: 360px) {
+    html {
+        font-size: 14px;
+    }
+    
+    .problem-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Для больших экранов */
+@media (min-width: 1400px) {
+    section {
+        max-width: 1400px;
+    }
+    
+    .problem-grid {
+        grid-template-columns: repeat(3, 1fr);
     }
 }

@@ -7,30 +7,64 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script>
-        // Инициализация TWA
-        const tg = window.Telegram.WebApp;
-        tg.ready();
-        tg.expand();
-        tg.setHeaderColor('#0a0a0a');
-        tg.setBackgroundColor('#0a0a0a');
-    </script>
 </head>
 
 <body>
+    <!-- Прогресс-бар чтения урока -->
+    <div class="reading-progress-container">
+        <div class="reading-progress-bar" id="reading-progress"></div>
+    </div>
+
     <!-- Навигация -->
     <nav class="navbar">
-        <div class="logo" onclick="showPage('home')">⚡️ Простое право</div>
-        <ul class="nav-links">
-            <li><a href="#library" onclick="showPage('library'); return false;">📚 Библиотека</a></li>
-            <li><a href="#problems">Проблемы</a></li>
-            <li><a href="#test">Тест</a></li>
-            <li><a href="#pricing">Тарифы</a></li>
+        <div class="logo" onclick="App.navigate('home')">⚡️ Простое право</div>
+        
+        <!-- Десктопное меню -->
+        <ul class="nav-links" id="desktop-nav">
+            <li><a href="#library" onclick="App.navigate('library'); return false;">📚 Библиотека</a></li>
+            <li><a href="#problems" onclick="App.navigate('problems'); return false;">Проблемы</a></li>
+            <li><a href="#test" onclick="App.navigate('test'); return false;">Тест</a></li>
+            <li><a href="#pricing" onclick="App.navigate('pricing'); return false;">Тарифы</a></li>
         </ul>
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+
+        <!-- Статистика пользователя (видна всегда) -->
+        <div class="user-mini-stats" id="user-mini-stats">
+            <span class="level-badge" id="mini-level">Новичок</span>
+            <span class="xp-badge" id="mini-xp">0 XP</span>
+        </div>
+
+        <!-- Мобильное меню -->
+        <button class="mobile-menu-btn" onclick="App.toggleMobileMenu()" aria-label="Меню">☰</button>
     </nav>
+
+    <!-- Мобильное меню (оверлей) -->
+    <div class="mobile-menu" id="mobile-menu">
+        <button class="mobile-menu-close" onclick="App.toggleMobileMenu()">✕</button>
+        <ul>
+            <li><a href="#library" onclick="App.navigate('library'); App.toggleMobileMenu(); return false;">📚 Библиотека</a></li>
+            <li><a href="#problems" onclick="App.navigate('problems'); App.toggleMobileMenu(); return false;">Проблемы</a></li>
+            <li><a href="#test" onclick="App.navigate('test'); App.toggleMobileMenu(); return false;">Тест</a></li>
+            <li><a href="#pricing" onclick="App.navigate('pricing'); App.toggleMobileMenu(); return false;">Тарифы</a></li>
+        </ul>
+        <div class="mobile-user-stats">
+            <div class="stat-item">
+                <span class="stat-label">Уровень</span>
+                <span class="stat-value" id="mobile-level">Новичок</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">XP</span>
+                <span class="stat-value" id="mobile-xp">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Серия</span>
+                <span class="stat-value" id="mobile-streak">🔥 0</span>
+            </div>
+        </div>
+    </div>
 
     <!-- ГЛАВНАЯ СТРАНИЦА -->
     <div id="page-home">
@@ -41,9 +75,49 @@
                 <h1>Знание прав <span class="highlight">освобождает</span> от неприятностей</h1>
                 <p class="subtitle">И от манипуляций тех, кто считает тебя бесправным. Короткие гайды без воды и юридического сленга.</p>
                 
+                <!-- Полная статистика пользователя -->
+                <div class="user-stats-card" id="user-stats-card">
+                    <div class="stat-row">
+                        <div class="stat-block">
+                            <div class="stat-icon">🏆</div>
+                            <div class="stat-info">
+                                <div class="stat-label">Уровень</div>
+                                <div class="stat-value" id="main-level">Новичок</div>
+                            </div>
+                        </div>
+                        <div class="stat-block">
+                            <div class="stat-icon">⭐</div>
+                            <div class="stat-info">
+                                <div class="stat-label">Опыт</div>
+                                <div class="stat-value"><span id="main-xp">0</span> XP</div>
+                            </div>
+                        </div>
+                        <div class="stat-block">
+                            <div class="stat-icon">🔥</div>
+                            <div class="stat-info">
+                                <div class="stat-label">Серия</div>
+                                <div class="stat-value"><span id="main-streak">0</span> дней</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="progress-section">
+                        <div class="progress-label">Прогресс обучения</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="main-progress">
+                                <div class="progress-fill" id="main-progress-fill"></div>
+                            </div>
+                            <span class="progress-text" id="main-progress-text">0/6 уроков</span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="hero-buttons">
-                    <a href="#library" class="btn btn-primary" onclick="showPage('library'); return false;">📚 Открыть библиотеку уроков</a>
-                    <a href="#continue" class="btn btn-secondary" onclick="continueLearning(); return false;">▶️ Продолжить обучение</a>
+                    <a href="#library" class="btn btn-primary" onclick="App.navigate('library'); return false;">
+                        📚 Открыть библиотеку
+                    </a>
+                    <a href="#continue" class="btn btn-secondary" onclick="Lessons.continueLearning(); return false;">
+                        ▶️ Продолжить обучение
+                    </a>
                 </div>
 
                 <div class="trust-badges">
@@ -54,16 +128,16 @@
             </div>
         </header>
 
-        <!-- Библиотека (новая секция в стиле проблем) -->
+        <!-- Библиотека -->
         <section id="library" class="problems">
             <h2>📚 Библиотека знаний</h2>
             <p class="section-subtitle">Выбери тему и изучи за 15 минут</p>
             
             <div class="category-chips">
-                <button class="chip active" onclick="filterLibrary('all')">Все</button>
-                <button class="chip" onclick="filterLibrary('rent')">🏠 Аренда</button>
-                <button class="chip" onclick="filterLibrary('work')">💼 Работа</button>
-                <button class="chip" onclick="filterLibrary('money')">💸 Деньги</button>
+                <button class="chip active" onclick="UI.filterLibrary('all')">Все</button>
+                <button class="chip" onclick="UI.filterLibrary('rent')">🏠 Аренда</button>
+                <button class="chip" onclick="UI.filterLibrary('work')">💼 Работа</button>
+                <button class="chip" onclick="UI.filterLibrary('money')">💸 Деньги</button>
             </div>
 
             <div class="problem-grid" id="library-grid">
@@ -71,41 +145,15 @@
             </div>
         </section>
 
-        <!-- Блок боли (Проблемы) -->
+        <!-- Проблемы -->
         <section id="problems" class="problems">
             <h2>Типичные ситуации, где тебя могут кинуть</h2>
-            <div class="problem-grid">
-                <div class="problem-card urgent" onclick="openLesson(1)">
-                    <span class="icon">🏠</span>
-                    <h3>Съезжаешь от родителей?</h3>
-                    <p>80% договоров аренды содержат кабальные пункты. Покажем, где именно подвох.</p>
-                    <span class="link-arrow">Открыть урок →</span>
-                </div>
-                
-                <div class="problem-card" onclick="openLesson(2)">
-                    <span class="icon">💼</span>
-                    <h3>Первое ТК или фриланс</h3>
-                    <p>Работодатель говорит «это стандартная форма»? Научим читать между строк.</p>
-                    <span class="link-arrow">Чек-лист по ТК →</span>
-                </div>
-                
-                <div class="problem-card" onclick="openLesson(3)">
-                    <span class="icon">📱</span>
-                    <h3>Подписки и автоплатежи</h3>
-                    <p>Сервис списал деньги после бесплатного периода? Как вернуть и отключить.</p>
-                    <span class="link-arrow">Инструкция →</span>
-                </div>
-                
-                <div class="problem-card" onclick="openLesson(4)">
-                    <span class="icon">💸</span>
-                    <h3>Коллекторы и долги</h3>
-                    <p>Страшные письма и звонки? 60% их угроз — блеф. Разберем, когда бояться.</p>
-                    <span class="link-arrow">Что делать? →</span>
-                </div>
+            <div class="problem-grid" id="problems-grid">
+                <!-- JS заполнит -->
             </div>
         </section>
 
-        <!-- Форматы обучения -->
+        <!-- Форматы -->
         <section id="formats" class="formats">
             <h2>Как это работает</h2>
             <p class="section-subtitle">Никаких лекций по 2 часа. Только то, что нужно прямо сейчас.</p>
@@ -132,7 +180,7 @@
             </div>
         </section>
 
-        <!-- Интерактивный тест -->
+        <!-- Квиз -->
         <section id="test" class="quiz-section">
             <div class="quiz-container">
                 <h2>Проверь свой юридический уровень</h2>
@@ -140,34 +188,34 @@
                     <div class="quiz-question active" data-question="1">
                         <p class="question-text">1/3. Ты сдаешь квартиру. Жилец разбил окно. Кто платит?</p>
                         <div class="quiz-options">
-                            <button class="quiz-btn" onclick="answer(1, false)">Жилец, он же разбил</button>
-                            <button class="quiz-btn" onclick="answer(1, true)">Смотря что написано в акте приема-передачи</button>
-                            <button class="quiz-btn" onclick="answer(1, false)">Делим пополам</button>
+                            <button class="quiz-btn" onclick="Quiz.answer(1, false)">Жилец, он же разбил</button>
+                            <button class="quiz-btn" onclick="Quiz.answer(1, true)">Смотря что написано в акте приема-передачи</button>
+                            <button class="quiz-btn" onclick="Quiz.answer(1, false)">Делим пополам</button>
                         </div>
                     </div>
                     
                     <div class="quiz-question" data-question="2">
                         <p class="question-text">2/3. Тебя уволили «по соглашению сторон» без выплат. Твои действия?</p>
                         <div class="quiz-options">
-                            <button class="quiz-btn" onclick="answer(2, false)">Подписать, чтобы не конфликтовать</button>
-                            <button class="quiz-btn" onclick="answer(2, true)">Требовать компенсацию или отказаться</button>
-                            <button class="quiz-btn" onclick="answer(2, false)">Написать гневный пост в Twitter</button>
+                            <button class="quiz-btn" onclick="Quiz.answer(2, false)">Подписать, чтобы не конфликтовать</button>
+                            <button class="quiz-btn" onclick="Quiz.answer(2, true)">Требовать компенсацию или отказаться</button>
+                            <button class="quiz-btn" onclick="Quiz.answer(2, false)">Написать гневный пост в Twitter</button>
                         </div>
                     </div>
                     
                     <div class="quiz-question" data-question="3">
                         <p class="question-text">3/3. Пришло письмо от коллекторов по чужому долгу. Что делать?</p>
                         <div class="quiz-options">
-                            <button class="quiz-btn" onclick="answer(3, false)">Игнорировать — раз не мой долг</button>
-                            <button class="quiz-btn" onclick="answer(3, false)">Заплатить, чтобы отстали</button>
-                            <button class="quiz-btn" onclick="answer(3, true)">Направить заявление о прекращении обработки данных</button>
+                            <button class="quiz-btn" onclick="Quiz.answer(3, false)">Игнорировать — раз не мой долг</button>
+                            <button class="quiz-btn" onclick="Quiz.answer(3, false)">Заплатить, чтобы отстали</button>
+                            <button class="quiz-btn" onclick="Quiz.answer(3, true)">Направить заявление о прекращении обработки данных</button>
                         </div>
                     </div>
                     
                     <div class="quiz-result" id="quiz-result">
                         <h3 id="result-title"></h3>
                         <p id="result-text"></p>
-                        <a href="#library" class="btn btn-primary" onclick="showPage('library')">Начать учиться</a>
+                        <div id="result-actions"></div>
                     </div>
                 </div>
             </div>
@@ -187,7 +235,7 @@
                         <li>Бот-консультант по базовым вопросам</li>
                         <li>Чек-листы в Telegram</li>
                     </ul>
-                    <button class="btn btn-outline" onclick="showPage('library')">Начать бесплатно</button>
+                    <button class="btn btn-outline" onclick="App.navigate('library')">Начать бесплатно</button>
                 </div>
                 
                 <div class="pricing-card popular">
@@ -200,7 +248,7 @@
                         <li>Обновления законов 2024-2025</li>
                         <li>Скачивание чек-листов</li>
                     </ul>
-                    <button class="btn btn-primary" onclick="tg.MainButton.show(); tg.MainButton.setText('Оплатить 990₽');">Выбрать</button>
+                    <button class="btn btn-primary" onclick="Payments.init(990, 'basic')">Выбрать</button>
                 </div>
                 
                 <div class="pricing-card">
@@ -212,7 +260,7 @@
                         <li>Приоритет в чате</li>
                         <li>Шаблоны документов под твой случай</li>
                     </ul>
-                    <button class="btn btn-outline">Выбрать</button>
+                    <button class="btn btn-outline" onclick="Payments.init(2490, 'pro')">Выбрать</button>
                 </div>
             </div>
         </section>
@@ -265,14 +313,20 @@
         </section>
     </div>
 
-    <!-- СТРАНИЦА УРОКА (открывается поверх) -->
+    <!-- СТРАНИЦА УРОКА (оверлей) -->
     <div id="page-lesson" class="page-overlay">
         <div class="lesson-container">
-            <button class="back-btn" onclick="closeLesson()">← Назад к библиотеке</button>
+            <button class="back-btn" onclick="Lessons.close()">
+                <span class="back-icon">←</span>
+                <span class="back-text">Назад к библиотеке</span>
+            </button>
             
             <div class="lesson-header">
                 <span class="lesson-category" id="lesson-cat">🏠 Аренда</span>
-                <button class="favorite-btn" id="fav-btn" onclick="toggleFavorite()">☆</button>
+                <div class="lesson-actions-header">
+                    <button class="favorite-btn" id="fav-btn" onclick="Lessons.toggleFavorite()" title="В избранное">☆</button>
+                    <button class="share-btn" onclick="Lessons.share()" title="Поделиться">↗</button>
+                </div>
             </div>
             
             <h1 id="lesson-title">Название урока</h1>
@@ -280,22 +334,43 @@
             <div class="lesson-meta-bar">
                 <span id="lesson-type">📄 Статья</span>
                 <span id="lesson-time">⏱ 5 мин</span>
+                <span id="lesson-xp" class="xp-badge">+50 XP</span>
                 <span class="completed-badge" id="lesson-completed" style="display: none;">✓ Пройдено</span>
             </div>
 
-            <div class="lesson-content-box" id="lesson-content">
-                <!-- Контент -->
+            <div class="lesson-content-wrapper">
+                <div class="lesson-content-box" id="lesson-content">
+                    <!-- Контент -->
+                </div>
+                
+                <!-- Навигация по уроку -->
+                <div class="lesson-navigation-hint">
+                    <span class="swipe-hint">← Свайп влево/вправо для переключения →</span>
+                    <span class="scroll-hint">↓ Скролл для чтения ↓</span>
+                </div>
             </div>
 
             <div class="lesson-actions">
-                <button class="btn btn-outline" onclick="prevLesson()">← Предыдущий</button>
-                <button class="btn btn-primary" id="mark-complete-btn" onclick="markComplete()">
-                    ✓ Я всё понял
+                <button class="btn btn-outline btn-nav" onclick="Lessons.prev()">
+                    <span class="nav-arrow">←</span>
+                    <span class="nav-text">Предыдущий</span>
                 </button>
-                <button class="btn btn-outline" onclick="nextLesson()">Следующий →</button>
+                
+                <button class="btn btn-primary btn-complete" id="mark-complete-btn" onclick="Lessons.markComplete()">
+                    <span class="complete-icon">✓</span>
+                    <span class="complete-text">Я всё понял</span>
+                </button>
+                
+                <button class="btn btn-outline btn-nav" onclick="Lessons.next()">
+                    <span class="nav-text">Следующий</span>
+                    <span class="nav-arrow">→</span>
+                </button>
             </div>
         </div>
     </div>
+
+    <!-- Toast уведомления -->
+    <div class="toast-container" id="toast-container"></div>
 
     <!-- Футер -->
     <footer>
@@ -303,7 +378,7 @@
             <div class="footer-logo">⚡️ Простое право</div>
             <p>Знание прав освобождает от неприятностей</p>
             <div class="social-links">
-                <a href="#" onclick="tg.openTelegramLink('https://t.me/prostoepravo')">Telegram</a>
+                <a href="#" onclick="App.openTelegram()">Telegram</a>
                 <a href="#">TikTok</a>
                 <a href="#">YouTube</a>
             </div>
@@ -311,6 +386,16 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <!-- Модули JS -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/gamification.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/lessons.js"></script>
+    <script src="js/quiz.js"></script>
+    <script src="js/payments.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
