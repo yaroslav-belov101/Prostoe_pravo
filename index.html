@@ -3,166 +3,132 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Простое право — короткие гайды по правовой грамотности для зумеров. Без воды и сложных терминов.">
+    <meta name="theme-color" content="#0a0a0a">
     <title>Простое право — Знание прав освобождает от неприятностей</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/animations.css">
+    
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 
 <body>
-    <!-- Прогресс-бар чтения урока -->
-    <div class="reading-progress-container">
-        <div class="reading-progress-bar" id="reading-progress"></div>
-    </div>
-
     <!-- Навигация -->
-    <nav class="navbar">
-        <div class="logo" onclick="App.navigate('home')">⚡️ Простое право</div>
+    <nav class="navbar" role="navigation" aria-label="Главная навигация">
+        <div class="logo" data-action="navigate-home">⚡️ Простое право</div>
         
-        <!-- Десктопное меню -->
         <ul class="nav-links" id="desktop-nav">
-            <li><a href="#library" onclick="App.navigate('library'); return false;">📚 Библиотека</a></li>
-            <li><a href="#problems" onclick="App.navigate('problems'); return false;">Проблемы</a></li>
-            <li><a href="#test" onclick="App.navigate('test'); return false;">Тест</a></li>
-            <li><a href="#pricing" onclick="App.navigate('pricing'); return false;">Тарифы</a></li>
+            <li><a href="library.html">📚 Библиотека</a></li>
+            <li><a href="practice.html">🎯 Практика</a></li>
+            <li><a href="pricing.html">💎 Тарифы</a></li>
         </ul>
 
-        <!-- Статистика пользователя (видна всегда) -->
-        <div class="user-mini-stats" id="user-mini-stats">
-            <span class="level-badge" id="mini-level">Новичок</span>
-            <span class="xp-badge" id="mini-xp">0 XP</span>
+        <div class="user-mini-stats">
+            <span class="level-badge" data-bind="level">Новичок</span>
+            <span class="xp-badge"><span data-bind="xp">0</span> XP</span>
         </div>
 
-        <!-- Мобильное меню -->
-        <button class="mobile-menu-btn" onclick="App.toggleMobileMenu()" aria-label="Меню">☰</button>
+        <button class="mobile-menu-btn" data-action="toggle-menu" aria-label="Открыть меню">☰</button>
     </nav>
 
-    <!-- Мобильное меню (оверлей) -->
-    <div class="mobile-menu" id="mobile-menu">
-        <button class="mobile-menu-close" onclick="App.toggleMobileMenu()">✕</button>
-        <ul>
-            <li><a href="#library" onclick="App.navigate('library'); App.toggleMobileMenu(); return false;">📚 Библиотека</a></li>
-            <li><a href="#problems" onclick="App.navigate('problems'); App.toggleMobileMenu(); return false;">Проблемы</a></li>
-            <li><a href="#test" onclick="App.navigate('test'); App.toggleMobileMenu(); return false;">Тест</a></li>
-            <li><a href="#pricing" onclick="App.navigate('pricing'); App.toggleMobileMenu(); return false;">Тарифы</a></li>
+    <!-- Мобильное меню -->
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+        <button class="mobile-menu-close" data-action="toggle-menu" aria-label="Закрыть меню">✕</button>
+        <ul class="mobile-nav-links">
+            <li><a href="index.html">🏠 Главная</a></li>
+            <li><a href="library.html">📚 Библиотека</a></li>
+            <li><a href="practice.html">🎯 Практика</a></li>
+            <li><a href="pricing.html">💎 Тарифы</a></li>
         </ul>
         <div class="mobile-user-stats">
             <div class="stat-item">
                 <span class="stat-label">Уровень</span>
-                <span class="stat-value" id="mobile-level">Новичок</span>
+                <span class="stat-value" data-bind="level">Новичок</span>
             </div>
             <div class="stat-item">
                 <span class="stat-label">XP</span>
-                <span class="stat-value" id="mobile-xp">0</span>
+                <span class="stat-value" data-bind="xp">0</span>
             </div>
             <div class="stat-item">
                 <span class="stat-label">Серия</span>
-                <span class="stat-value" id="mobile-streak">🔥 0</span>
+                <span class="stat-value" data-bind="streak">🔥 0</span>
             </div>
         </div>
     </div>
 
-    <!-- ГЛАВНАЯ СТРАНИЦА -->
-    <div id="page-home">
+    <main>
         <!-- Hero Section -->
-        <header class="hero">
+        <section class="hero" aria-labelledby="hero-title">
             <div class="hero-content">
                 <div class="badge">🔥 Для зумеров, которые хотят быть в безопасности</div>
-                <h1>Знание прав <span class="highlight">освобождает</span> от неприятностей</h1>
+                <h1 id="hero-title">Знание прав <span class="highlight">освобождает</span> от неприятностей</h1>
                 <p class="subtitle">И от манипуляций тех, кто считает тебя бесправным. Короткие гайды без воды и юридического сленга.</p>
                 
-                <!-- Полная статистика пользователя -->
+                <!-- Персональная статистика -->
                 <div class="user-stats-card" id="user-stats-card">
                     <div class="stat-row">
                         <div class="stat-block">
                             <div class="stat-icon">🏆</div>
                             <div class="stat-info">
                                 <div class="stat-label">Уровень</div>
-                                <div class="stat-value" id="main-level">Новичок</div>
+                                <div class="stat-value" data-bind="level">Новичок</div>
                             </div>
                         </div>
                         <div class="stat-block">
                             <div class="stat-icon">⭐</div>
                             <div class="stat-info">
                                 <div class="stat-label">Опыт</div>
-                                <div class="stat-value"><span id="main-xp">0</span> XP</div>
+                                <div class="stat-value"><span data-bind="xp">0</span> XP</div>
                             </div>
                         </div>
                         <div class="stat-block">
                             <div class="stat-icon">🔥</div>
                             <div class="stat-info">
                                 <div class="stat-label">Серия</div>
-                                <div class="stat-value"><span id="main-streak">0</span> дней</div>
+                                <div class="stat-value"><span data-bind="streak">0</span> дней</div>
                             </div>
                         </div>
                     </div>
                     <div class="progress-section">
                         <div class="progress-label">Прогресс обучения</div>
                         <div class="progress-bar-container">
-                            <div class="progress-bar" id="main-progress">
-                                <div class="progress-fill" id="main-progress-fill"></div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" data-bind="progress-percent" style="width: 0%"></div>
                             </div>
-                            <span class="progress-text" id="main-progress-text">0/6 уроков</span>
+                            <span class="progress-text"><span data-bind="completed-count">0</span>/24 уроков</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="hero-buttons">
-                    <a href="#library" class="btn btn-primary" onclick="App.navigate('library'); return false;">
-                        📚 Открыть библиотеку
-                    </a>
-                    <a href="#continue" class="btn btn-secondary" onclick="Lessons.continueLearning(); return false;">
-                        ▶️ Продолжить обучение
-                    </a>
+                    <a href="library.html" class="btn btn-primary">📚 Начать обучение</a>
+                    <a href="practice.html" class="btn btn-secondary">🎯 Проверить знания</a>
                 </div>
 
                 <div class="trust-badges">
-                    <span>✓ <span id="completed-counter">0</span>/24 уроков</span>
+                    <span>✓ <span data-bind="completed-count">0</span>/24 уроков</span>
                     <span>✓ Без договоров оферты</span>
                     <span>✓ Отмена в 1 клик</span>
                 </div>
             </div>
-        </header>
-
-        <!-- Библиотека -->
-        <section id="library" class="problems">
-            <h2>📚 Библиотека знаний</h2>
-            <p class="section-subtitle">Выбери тему и изучи за 15 минут</p>
-            
-            <div class="category-chips">
-                <button class="chip active" onclick="UI.filterLibrary('all', event)">Все</button>
-                <button class="chip" onclick="UI.filterLibrary('rent', event)">🏠 Аренда</button>
-                <button class="chip" onclick="UI.filterLibrary('work', event)">💼 Работа</button>
-                <button class="chip" onclick="UI.filterLibrary('money', event)">💸 Деньги</button>
-            </div>
-
-            <div class="problem-grid" id="library-grid">
-                <!-- JS заполнит -->
-            </div>
         </section>
 
-        <!-- Проблемы -->
-        <section id="problems" class="problems">
-            <h2>Типичные ситуации, где тебя могут кинуть</h2>
-            <div class="problem-grid" id="problems-grid">
-                <!-- JS заполнит -->
-            </div>
-        </section>
-
-        <!-- Форматы -->
-        <section id="formats" class="formats">
-            <h2>Как это работает</h2>
+        <!-- Как это работает -->
+        <section class="formats" id="formats" aria-labelledby="formats-title">
+            <h2 id="formats-title">Как это работает</h2>
             <p class="section-subtitle">Никаких лекций по 2 часа. Только то, что нужно прямо сейчас.</p>
             
             <div class="format-grid">
                 <div class="format-card">
                     <div class="format-icon">⚡️</div>
                     <h3>Закон за 60 сек</h3>
-                    <p>Вертикальные видео для Reels/TikTok + текстовая версия для тех, кто в метро.</p>
+                    <p>Вертикальные видео + текстовая версия для тех, кто в метро.</p>
                 </div>
                 
                 <div class="format-card highlight">
@@ -180,93 +146,20 @@
             </div>
         </section>
 
-        <!-- Квиз -->
-        <section id="test" class="quiz-section">
-            <div class="quiz-container">
-                <h2>Проверь свой юридический уровень</h2>
-                <div id="quiz">
-                    <div class="quiz-question active" data-question="1">
-                        <p class="question-text">1/3. Ты сдаешь квартиру. Жилец разбил окно. Кто платит?</p>
-                        <div class="quiz-options">
-                            <button class="quiz-btn" onclick="Quiz.answer(1, false)">Жилец, он же разбил</button>
-                            <button class="quiz-btn" onclick="Quiz.answer(1, true)">Смотря что написано в акте приема-передачи</button>
-                            <button class="quiz-btn" onclick="Quiz.answer(1, false)">Делим пополам</button>
-                        </div>
-                    </div>
-                    
-                    <div class="quiz-question" data-question="2">
-                        <p class="question-text">2/3. Тебя уволили «по соглашению сторон» без выплат. Твои действия?</p>
-                        <div class="quiz-options">
-                            <button class="quiz-btn" onclick="Quiz.answer(2, false)">Подписать, чтобы не конфликтовать</button>
-                            <button class="quiz-btn" onclick="Quiz.answer(2, true)">Требовать компенсацию или отказаться</button>
-                            <button class="quiz-btn" onclick="Quiz.answer(2, false)">Написать гневный пост в Twitter</button>
-                        </div>
-                    </div>
-                    
-                    <div class="quiz-question" data-question="3">
-                        <p class="question-text">3/3. Пришло письмо от коллекторов по чужому долгу. Что делать?</p>
-                        <div class="quiz-options">
-                            <button class="quiz-btn" onclick="Quiz.answer(3, false)">Игнорировать — раз не мой долг</button>
-                            <button class="quiz-btn" onclick="Quiz.answer(3, false)">Заплатить, чтобы отстали</button>
-                            <button class="quiz-btn" onclick="Quiz.answer(3, true)">Направить заявление о прекращении обработки данных</button>
-                        </div>
-                    </div>
-                    
-                    <div class="quiz-result" id="quiz-result">
-                        <h3 id="result-title"></h3>
-                        <p id="result-text"></p>
-                        <div id="result-actions"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Тарифы -->
-        <section id="pricing" class="pricing">
-            <h2>Тарифы</h2>
-            <p class="section-subtitle">Честные цены без скрытых платежей. Отмена в любой момент.</p>
-            
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <h3>SOS</h3>
-                    <div class="price">0 ₽</div>
-                    <ul>
-                        <li>База статей «Что делать, если...»</li>
-                        <li>Бот-консультант по базовым вопросам</li>
-                        <li>Чек-листы в Telegram</li>
-                    </ul>
-                    <button class="btn btn-outline" onclick="App.navigate('library')">Начать бесплатно</button>
-                </div>
-                
-                <div class="pricing-card popular">
-                    <h3>Базовый</h3>
-                    <div class="price">990 ₽<span>/мес</span></div>
-                    <ul>
-                        <li>Все курсы без ограничений</li>
-                        <li>Закрытый чат с юристом</li>
-                        <li>Обновления законов 2024-2025</li>
-                        <li>Скачивание чек-листов</li>
-                    </ul>
-                    <button class="btn btn-primary" onclick="Payments.init(990, 'basic')">Выбрать</button>
-                </div>
-                
-                <div class="pricing-card">
-                    <h3>Продвинутый</h3>
-                    <div class="price">2 490 ₽<span>/мес</span></div>
-                    <ul>
-                        <li>Все из Базового</li>
-                        <li>Разбор твоей личной ситуации 1 раз в мес</li>
-                        <li>Приоритет в чате</li>
-                        <li>Шаблоны документов под твой случай</li>
-                    </ul>
-                    <button class="btn btn-outline" onclick="Payments.init(2490, 'pro')">Выбрать</button>
-                </div>
+        <!-- Быстрый доступ к темам -->
+        <section class="quick-topics" aria-labelledby="topics-title">
+            <h2 id="topics-title">С чего начать</h2>
+            <div class="topic-chips">
+                <a href="library.html?category=rent" class="chip-topic">🏠 Снял квартиру — как не потерять депозит</a>
+                <a href="library.html?category=work" class="chip-topic">💼 Устроился на работу — что проверить в договоре</a>
+                <a href="library.html?category=money" class="chip-topic">💸 Пришли коллекторы — как отбиться</a>
+                <a href="practice.html" class="chip-topic highlight">🎯 Пройти тест на знание прав</a>
             </div>
         </section>
 
         <!-- Отзывы -->
-        <section class="testimonials">
-            <h2>Истории, когда знание прав спасло</h2>
+        <section class="testimonials" aria-labelledby="testimonials-title">
+            <h2 id="testimonials-title">Истории, когда знание прав спасло</h2>
             <div class="testimonial-grid">
                 <div class="testimonial">
                     <div class="testimonial-header">
@@ -289,12 +182,41 @@
                     </div>
                     <p>«HR давила, что «все так делают» и заставила подписать соглашение. Я знал, что мне положены выплаты, и отстоял 3 оклада.»</p>
                 </div>
+                
+                <div class="testimonial">
+                    <div class="testimonial-header">
+                        <div class="avatar">К</div>
+                        <div>
+                            <div class="name">Катя, 20</div>
+                            <div class="meta">Отменила автопродление подписки</div>
+                        </div>
+                    </div>
+                    <p>«Сервис списал 12 000 за годовую подписку без предупреждения. Написала претензию по шаблону из приложения — вернули деньги за 3 дня.»</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Статистика проекта -->
+        <section class="project-stats" aria-label="Статистика проекта">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">24</div>
+                    <div class="stat-label">Практических урока</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">Минут на урок</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Юридического сленга</div>
+                </div>
             </div>
         </section>
 
         <!-- FAQ -->
-        <section class="faq">
-            <h2>Вопросы, которые вы задаете в Telegram</h2>
+        <section class="faq" aria-labelledby="faq-title">
+            <h2 id="faq-title">Вопросы, которые вы задаете</h2>
             <div class="faq-list">
                 <details>
                     <summary>А это легально? Вы что, юристы?</summary>
@@ -308,93 +230,49 @@
                     <summary>Можно ли отменить подписку?</summary>
                     <p>Да, в один клик в личном кабинете. Никаких звонков менеджерам.</p>
                 </details>
+                <details>
+                    <summary>Будут ли новые уроки?</summary>
+                    <p>Да, мы добавляем 2-3 новых материала каждую неделю по запросам пользователей.</p>
+                </details>
             </div>
         </section>
-    </div>
 
-    <!-- СТРАНИЦА УРОКА (оверлей) -->
-    <div id="page-lesson" class="page-overlay">
-        <div class="lesson-container">
-            <button class="back-btn" onclick="Lessons.close()">
-                <span class="back-icon">←</span>
-                <span class="back-text">Назад к библиотеке</span>
-            </button>
-            
-            <div class="lesson-header">
-                <span class="lesson-category" id="lesson-cat">🏠 Аренда</span>
-                <div class="lesson-actions-header">
-                    <button class="favorite-btn" id="fav-btn" onclick="Lessons.toggleFavorite()" title="В избранное">☆</button>
-                    <button class="share-btn" onclick="Lessons.share()" title="Поделиться">↗</button>
+        <!-- CTA Section -->
+        <section class="cta-section" aria-labelledby="cta-title">
+            <div class="cta-content">
+                <h2 id="cta-title">Готов начать?</h2>
+                <p>Присоединяйся к тысячам молодых людей, которые больше не боятся юридических проблем</p>
+                <div class="cta-buttons">
+                    <a href="library.html" class="btn btn-primary btn-large">📚 Перейти в библиотеку</a>
+                    <a href="pricing.html" class="btn btn-outline btn-large">💎 Смотреть тарифы</a>
                 </div>
             </div>
-            
-            <h1 id="lesson-title">Название урока</h1>
-            
-            <div class="lesson-meta-bar">
-                <span id="lesson-type">📄 Статья</span>
-                <span id="lesson-time">⏱ 5 мин</span>
-                <span id="lesson-xp" class="xp-badge">+50 XP</span>
-                <span class="completed-badge" id="lesson-completed" style="display: none;">✓ Пройдено</span>
-            </div>
-
-            <div class="lesson-content-wrapper">
-                <div class="lesson-content-box" id="lesson-content">
-                    <!-- Контент -->
-                </div>
-                
-                <!-- Навигация по уроку -->
-                <div class="lesson-navigation-hint">
-                    <span class="swipe-hint">← Свайп влево/вправо для переключения →</span>
-                    <span class="scroll-hint">↓ Скролл для чтения ↓</span>
-                </div>
-            </div>
-
-            <div class="lesson-actions">
-                <button class="btn btn-outline btn-nav" onclick="Lessons.prev()">
-                    <span class="nav-arrow">←</span>
-                    <span class="nav-text">Предыдущий</span>
-                </button>
-                
-                <button class="btn btn-primary btn-complete" id="mark-complete-btn" onclick="Lessons.markComplete()">
-                    <span class="complete-icon">✓</span>
-                    <span class="complete-text">Я всё понял</span>
-                </button>
-                
-                <button class="btn btn-outline btn-nav" onclick="Lessons.next()">
-                    <span class="nav-text">Следующий</span>
-                    <span class="nav-arrow">→</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast уведомления -->
-    <div class="toast-container" id="toast-container"></div>
+        </section>
+    </main>
 
     <!-- Футер -->
-    <footer>
+    <footer role="contentinfo">
         <div class="footer-content">
             <div class="footer-logo">⚡️ Простое право</div>
             <p>Знание прав освобождает от неприятностей</p>
+            <nav class="footer-links" aria-label="Дополнительная навигация">
+                <a href="library.html">Библиотека</a>
+                <a href="practice.html">Практика</a>
+                <a href="pricing.html">Тарифы</a>
+            </nav>
             <div class="social-links">
-                <a href="#" onclick="App.openTelegram()">Telegram</a>
-                <a href="#">TikTok</a>
-                <a href="#">YouTube</a>
+                <a href="#" data-action="open-telegram">Telegram</a>
+                <a href="#" data-action="open-tiktok">TikTok</a>
+                <a href="#" data-action="open-youtube">YouTube</a>
             </div>
-            <p class="disclaimer">Мы не являемся юридической фирмой и не оказываем юридических услуг в классическом понимании.</p>
+            <p class="disclaimer">Мы не являемся юридической фирмой и не оказываем юридических услуг в классическом понимании. Информация предоставляется в образовательных целях.</p>
         </div>
     </footer>
 
-    <!-- Модули JS -->
-    <script src="js/config.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/storage.js"></script>
-    <script src="js/state.js"></script>
-    <script src="js/gamification.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/lessons.js"></script>
-    <script src="js/quiz.js"></script>
-    <script src="js/payments.js"></script>
-    <script src="js/app.js"></script>
+    <!-- Toast уведомления -->
+    <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- Модуль JS -->
+    <script type="module" src="js/app.js"></script>
 </body>
 </html>

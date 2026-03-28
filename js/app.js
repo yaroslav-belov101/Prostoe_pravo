@@ -1,146 +1,190 @@
 // ============================================
-// ГЛАВНЫЙ МОДУЛЬ
+// CONFIG & API
 // ============================================
-const App = {
-    async init() {
-        console.log(`${CONFIG.APP_NAME} v${CONFIG.VERSION} запущен`);
-        
-        if (Utils.isTelegram()) {
-            this.initTWA();
-        }
-        
-        await State.load();
-        UI.init();
-        this.checkReferral();
-        
-        if (State.completedLessons.length === 0) {
-            this.showWelcome();
-        }
-        
-        State.updateVisit();
-        this.setupGestures();
-    },
+const API_URL = import.meta.env?.VITE_API_URL || 'http://localhost:8000';
+const TG = window.Telegram?.WebApp;
 
-    initTWA() {
-        const TWA = window.Telegram.WebApp;
-        TWA.ready();
-        TWA.expand();
-        TWA.setHeaderColor('#0a0a0a');
-        TWA.setBackgroundColor('#0a0a0a');
-
-        TWA.onEvent('viewportChanged', () => {
-            document.documentElement.style.setProperty('--tg-viewport-height', TWA.viewportHeight + 'px');
-        });
-
-        TWA.BackButton.onClick(() => {
-            if (document.getElementById('page-lesson').classList.contains('active')) {
-                Lessons.close();
-            } else {
-                TWA.BackButton.hide();
-            }
-        });
-    },
-
-    navigate(page) {
-        const targets = {
-            home: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
-            library: () => document.getElementById('library')?.scrollIntoView({ behavior: 'smooth' }),
-            problems: () => document.getElementById('problems')?.scrollIntoView({ behavior: 'smooth' }),
-            test: () => document.getElementById('test')?.scrollIntoView({ behavior: 'smooth' }),
-            pricing: () => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
-        };
-        
-        if (targets[page]) {
-            targets[page]();
-            Utils.haptic('light');
-        }
-    },
-
-    toggleMobileMenu() {
-        const menu = document.getElementById('mobile-menu');
-        menu.classList.toggle('active');
-        Utils.haptic('medium');
-    },
-
-    openTelegram() {
-        const url = `https://t.me/${CONFIG.BOT_USERNAME}`;
-        if (Utils.isTelegram()) {
-            Utils.tg('openTelegramLink', url);
-        } else {
-            window.open(url, '_blank');
-        }
-    },
-
-    // ✅ ИСПРАВЛЕНО: Проверка на инициализацию TWA
-    checkReferral() {
-        if (!Utils.isTelegram()) return;
-        
-        // ✅ Дополнительная проверка на initDataUnsafe
-        if (!window.Telegram.WebApp?.initDataUnsafe) return;
-        
-        const startParam = window.Telegram.WebApp.initDataUnsafe.start_param;
-        if (!startParam) return;
-        
-        if (startParam.startsWith('ref_')) {
-            const refCode = startParam.replace('ref_', '');
-            console.log('Реферальный код:', refCode);
-            State.addXP(CONFIG.XP.REFERRAL);
-            Utils.toast('Бонус за приглашение друга! +50 XP');
-        }
-        
-        if (startParam.startsWith('lesson_')) {
-            const lessonId = parseInt(startParam.replace('lesson_', ''));
-            setTimeout(() => Lessons.open(lessonId), 1000);
-        }
-    },
-
-    showWelcome() {
-        setTimeout(() => {
-            if (Utils.isTelegram()) {
-                Utils.tg('showPopup', {
-                    title: 'Добро пожаловать! 👋',
-                    message: 'Пройди быстрый тест, чтобы узнать свой уровень юридической грамотности.',
-                    buttons: [
-                        { id: 'test', type: 'default', text: 'Пройти тест' },
-                        { type: 'cancel' }
-                    ]
-                }, (buttonId) => {
-                    if (buttonId === 'test') {
-                        this.navigate('test');
-                    }
-                });
-            }
-        }, 1500);
-    },
-
-    setupGestures() {
-        let touchStartX = 0;
-        let touchStartY = 0;
-        
-        document.addEventListener('touchstart', (e) => {
-            touchStartX = e.changedTouches[0].screenX;
-            touchStartY = e.changedTouches[0].screenY;
-        }, { passive: true });
-        
-        document.addEventListener('touchend', (e) => {
-            const touchEndX = e.changedTouches[0].screenX;
-            const touchEndY = e.changedTouches[0].screenY;
-            const deltaX = touchStartX - touchEndX;
-            const deltaY = touchStartY - touchEndY;
-            
-            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
-                if (document.getElementById('page-lesson').classList.contains('active')) {
-                    if (deltaX > 0) {
-                        Lessons.next();
-                    } else {
-                        Lessons.prev();
-                    }
-                }
-            }
-        }, { passive: true });
-    }
+const api = {
+  async fetch(endpoint, opts = {}) {
+    const initData = TG?.initData || '';
+    const res = await fetch(`${API_URL}${endpoint}`, {
+      ...opts,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `tma ${initData}`,
+        ...opts.headers
+      }
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+  },
+  get: (url) => api.fetch(url),
+  post: (url, data) => api.fetch(url, { method: 'POST', body: JSON.stringify(data) })
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-    App.init();
+// ============================================
+// STATE (простой объект, без классов)
+// ============================================
+const state = {
+  user: { xp: 0, level: 'Новичок', completed: [] },
+  lessons: [],
+  
+  async load() {
+    const [user, lessons] = await Promise.all([
+      api.get('/me').catch(() => ({ xp: 0, completed: [] })),
+      api.get('/lessons')
+    ]);
+    this.user = { ...this.user, ...user };
+    this.lessons = lessons;
+    this.render();
+  },
+  
+  async complete(id) {
+    if (this.user.completed.includes(id)) return;
+    await api.post('/progress', { lesson_id: id });
+    this.user.completed.push(id);
+    this.user.xp += 50; // или получи с сервера
+    haptic('success');
+    this.render();
+    toast(`+50 XP`);
+  },
+  
+  render() {
+    // Обновляем все [data-bind] элементы
+    document.querySelectorAll('[data-bind]').forEach(el => {
+      const key = el.dataset.bind;
+      if (key === 'xp') el.textContent = this.user.xp;
+      if (key === 'level') el.textContent = this.user.level;
+      if (key === 'streak') el.textContent = this.user.streak || 0;
+      if (key === 'progress') {
+        const pct = (this.user.completed.length / this.lessons.length) * 100;
+        el.style.width = `${pct}%`;
+      }
+    });
+    
+    // Обновляем счетчики
+    const completed = this.user.completed.length;
+    document.querySelectorAll('[data-count]').forEach(el => {
+      if (el.dataset.count === 'completed') el.textContent = completed;
+      if (el.dataset.count === 'total') el.textContent = this.lessons.length;
+    });
+  }
+};
+
+// ============================================
+// UI HELPERS
+// ============================================
+const $ = (sel) => document.querySelector(sel);
+const haptic = (type) => TG?.HapticFeedback?.impactOccurred(type);
+const toast = (msg) => {
+  const div = document.createElement('div');
+  div.className = 'toast';
+  div.textContent = msg;
+  document.body.appendChild(div);
+  setTimeout(() => div.remove(), 3000);
+};
+
+// ============================================
+// LESSON VIEWER
+// ============================================
+const viewer = {
+  open(id) {
+    const lesson = state.lessons.find(l => l.id === id);
+    if (!lesson) return;
+    
+    $('#lesson-title').textContent = lesson.title;
+    $('#lesson-content').innerHTML = lesson.content;
+    $('#lesson-cat').textContent = lesson.category;
+    
+    const isDone = state.user.completed.includes(id);
+    $('#btn-complete').textContent = isDone ? '✓ Пройдено' : 'Я всё понял';
+    $('#btn-complete').disabled = isDone;
+    $('#btn-complete').dataset.id = id;
+    
+    $('#page-lesson').classList.add('active');
+    TG?.BackButton?.show();
+    haptic('medium');
+  },
+  
+  close() {
+    $('#page-lesson').classList.remove('active');
+    TG?.BackButton?.hide();
+  }
+};
+
+// ============================================
+// RENDERERS
+// ============================================
+function renderLibrary(filter = 'all') {
+  const grid = $('#library-grid');
+  if (!grid) return;
+  
+  const lessons = filter === 'all' 
+    ? state.lessons 
+    : state.lessons.filter(l => l.category === filter);
+  
+  grid.innerHTML = lessons.map(l => `
+    <article class="problem-card ${state.user.completed.includes(l.id) ? 'completed' : ''}" 
+             data-action="open" data-id="${l.id}">
+      <span class="icon">${l.icon || '📚'}</span>
+      <span class="lesson-category-tag">${l.category}</span>
+      <h3>${l.title}</h3>
+      <p>${l.duration} • ${l.xp} XP</p>
+      <span class="link-arrow">Открыть →</span>
+    </article>
+  `).join('');
+}
+
+// ============================================
+// EVENT DELEGATION (вместо onclick)
+// ============================================
+document.body.addEventListener('click', async (e) => {
+  const btn = e.target.closest('[data-action]');
+  if (!btn) return;
+  
+  const { action, id } = btn.dataset;
+  
+  switch(action) {
+    case 'open':
+      viewer.open(+id);
+      break;
+      
+    case 'complete':
+      await state.complete(+id);
+      btn.textContent = '✓ Пройдено';
+      btn.disabled = true;
+      renderLibrary(); // обновить галочки
+      break;
+      
+    case 'close':
+      viewer.close();
+      break;
+      
+    case 'filter':
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      renderLibrary(btn.dataset.filter);
+      break;
+      
+    case 'next':
+      // логика следующего урока
+      break;
+  }
+});
+
+// ============================================
+// TELEGRAM INIT
+// ============================================
+if (TG) {
+  TG.ready();
+  TG.expand();
+  TG.BackButton.onClick(() => viewer.close());
+}
+
+// ============================================
+// STARTUP
+// ============================================
+state.load().then(() => {
+  renderLibrary();
+  console.log('App ready', state);
 });

@@ -1,0 +1,315 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Тарифы — Простое право</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+
+<body>
+    <!-- Навигация -->
+    <nav class="navbar">
+        <div class="logo" onclick="window.location.href='index.html'">⚡️ Простое право</div>
+        
+        <!-- Десктопное меню -->
+        <ul class="nav-links" id="desktop-nav">
+            <li><a href="library.html">📚 Библиотека</a></li>
+            <li><a href="practice.html">🎯 Практика</a></li>
+            <li><a href="pricing.html" class="active">💎 Тарифы</a></li>
+        </ul>
+
+        <!-- Статистика пользователя -->
+        <div class="user-mini-stats" id="user-mini-stats">
+            <span class="level-badge" id="mini-level">Новичок</span>
+            <span class="xp-badge" id="mini-xp">0 XP</span>
+        </div>
+
+        <button class="mobile-menu-btn" onclick="App.toggleMobileMenu()" aria-label="Меню">☰</button>
+    </nav>
+
+    <!-- Мобильное меню -->
+    <div class="mobile-menu" id="mobile-menu">
+        <button class="mobile-menu-close" onclick="App.toggleMobileMenu()">✕</button>
+        <ul>
+            <li><a href="index.html" onclick="App.toggleMobileMenu()">🏠 Главная</a></li>
+            <li><a href="library.html" onclick="App.toggleMobileMenu()">📚 Библиотека</a></li>
+            <li><a href="practice.html" onclick="App.toggleMobileMenu()">🎯 Практика</a></li>
+            <li><a href="pricing.html" onclick="App.toggleMobileMenu()">💎 Тарифы</a></li>
+        </ul>
+        <div class="mobile-user-stats">
+            <div class="stat-item">
+                <span class="stat-label">Уровень</span>
+                <span class="stat-value" id="mobile-level">Новичок</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">XP</span>
+                <span class="stat-value" id="mobile-xp">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Серия</span>
+                <span class="stat-value" id="mobile-streak">🔥 0</span>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- Header тарифов -->
+        <section class="page-header pricing-header">
+            <div class="container">
+                <h1>💎 Тарифы</h1>
+                <p class="subtitle">Честные цены без скрытых платежей. Отмена в любой момент.</p>
+                
+                <!-- Переключатель периода -->
+                <div class="billing-toggle">
+                    <button class="toggle-btn active" onclick="Payments.setBilling('monthly')">Ежемесячно</button>
+                    <button class="toggle-btn" onclick="Payments.setBilling('yearly')">
+                        Ежегодно
+                        <span class="discount-badge">-20%</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Сетка тарифов -->
+        <section class="pricing-section">
+            <div class="container">
+                <div class="pricing-grid">
+                    <!-- SOS / Free -->
+                    <div class="pricing-card">
+                        <div class="pricing-header-card">
+                            <h3>SOS</h3>
+                            <div class="price" data-monthly="0 ₽" data-yearly="0 ₽">0 ₽</div>
+                            <p class="price-note">Бесплатно навсегда</p>
+                        </div>
+                        <ul class="pricing-features">
+                            <li>
+                                <span class="check">✓</span>
+                                <span>База статей «Что делать, если...»</span>
+                            </li>
+                            <li>
+                                <span class="check">✓</span>
+                                <span>Бот-консультант по базовым вопросам</span>
+                            </li>
+                            <li>
+                                <span class="check">✓</span>
+                                <span>Чек-листы в Telegram</span>
+                            </li>
+                            <li class="disabled">
+                                <span class="cross">✕</span>
+                                <span>Закрытый чат с юристом</span>
+                            </li>
+                            <li class="disabled">
+                                <span class="cross">✕</span>
+                                <span>Разбор личной ситуации</span>
+                            </li>
+                        </ul>
+                        <button class="btn btn-outline btn-large" onclick="App.navigate('library')">Начать бесплатно</button>
+                    </div>
+                    
+                    <!-- Базовый -->
+                    <div class="pricing-card popular">
+                        <div class="popular-badge">Популярный</div>
+                        <div class="pricing-header-card">
+                            <h3>Базовый</h3>
+                            <div class="price" data-monthly="990 ₽" data-yearly="9 504 ₽">
+                                990 ₽<span>/мес</span>
+                            </div>
+                            <p class="price-note">или 792 ₽/мес при оплате за год</p>
+                        </div>
+                        <ul class="pricing-features">
+                            <li>
+                                <span class="check">✓</span>
+                                <span>Все курсы без ограничений</span>
+                            </li>
+                            <li>
+                                <span class="check">✓</span>
+                                <span>Закрытый чат с юристом</span>
+                            </li>
+                            <li>
+                                <span class="check">✓</span>
+                                <span>Обновления законов 2024-2025</span>
+                            </li>
+                            <li>
+                                <span class="check">✓</span>
+                                <span>Скачивание чек-листов PDF</span>
+                            </li>
+                            <li class="disabled">
+                                <span class="cross">✕</span>
+                                <span>Разбор личной ситуации</span>
+                            </li>
+                        </ul>
+                        <button class="btn btn-primary btn-large" onclick="Payments.init(990, 'basic')">Выбрать Базовый</button>
+                    </div>
+                    
+                    <!-- Продвинутый -->
+                    <div class="pricing-card">
+                        <div class="pricing-header-card">
+                            <h3>Продвинутый</h3>
+                            <div class="price" data-monthly="2 490 ₽" data-yearly="23 904 ₽">
+                                2 490 ₽<span>/мес</span>
+                            </div>
+                            <p class="price-note">или 1 992 ₽/мес при оплате за год</p>
+                        </div>
+                        <ul class="pricing-features">
+                            <li>
+                                <span class="check">✓</span>
+                                <span>Все из Базового</span>
+                            </li>
+                            <li>
+                                <span class="check">✓</span>
+                                <span>Разбор твоей личной ситуации 1 раз в мес</span>
+                            </li>
+                            <li>
+                                <span class="check">✓</span>
+                                <span>Приоритет в чате</span>
+                            </li>
+                            <li>
+                                <span class="check">✓</span>
+                                <span>Шаблоны документов под твой случай</span>
+                            </li>
+                            <li>
+                                <span class="check">✓</span>
+                                <span>Звонок юриста в критической ситуации</span>
+                            </li>
+                        </ul>
+                        <button class="btn btn-outline btn-large" onclick="Payments.init(2490, 'pro')">Выбрать Продвинутый</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Сравнение тарифов -->
+        <section class="comparison-section">
+            <div class="container">
+                <h2>Сравнение возможностей</h2>
+                <div class="comparison-table-wrapper">
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Возможность</th>
+                                <th>SOS</th>
+                                <th class="highlight">Базовый</th>
+                                <th>Продвинутый</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Доступ к статьям</td>
+                                <td>Базовые</td>
+                                <td class="highlight">Все</td>
+                                <td>Все</td>
+                            </tr>
+                            <tr>
+                                <td>Чек-листы PDF</td>
+                                <td>Только в TG</td>
+                                <td class="highlight">Скачивание</td>
+                                <td>Скачивание</td>
+                            </tr>
+                            <tr>
+                                <td>Чат с юристом</td>
+                                <td>—</td>
+                                <td class="highlight">✓</td>
+                                <td>Приоритет</td>
+                            </tr>
+                            <tr>
+                                <td>Разбор ситуации</td>
+                                <td>—</td>
+                                <td class="highlight">—</td>
+                                <td>1 раз в месяц</td>
+                            </tr>
+                            <tr>
+                                <td>Шаблоны документов</td>
+                                <td>—</td>
+                                <td class="highlight">Базовые</td>
+                                <td>Под твой случай</td>
+                            </tr>
+                            <tr>
+                                <td>Симулятор переговоров</td>
+                                <td>Демо</td>
+                                <td class="highlight">Полная версия</td>
+                                <td>Полная версия</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ по оплате -->
+        <section class="faq-section">
+            <div class="container">
+                <h2>Вопросы об оплате</h2>
+                <div class="faq-list">
+                    <details>
+                        <summary>Как отменить подписку?</summary>
+                        <p>В любой момент в личном кабинете или через бота в Telegram. Никаких звонков менеджерам и уговоров. Доступ останется до конца оплаченного периода.</p>
+                    </details>
+                    <details>
+                        <summary>Можно ли заморозить подписку?</summary>
+                        <p>Да, на срок до 3 месяцев. Напиши в поддержку — мы сохраним твой прогресс и серию.</p>
+                    </details>
+                    <details>
+                        <summary>Есть ли возврат средств?</summary>
+                        <p>В течение 7 дней после оплаты — полный возврат без вопросов. После 7 дней — возврат пропорционально неиспользованным дням.</p>
+                    </details>
+                    <details>
+                        <summary>Какие способы оплаты?</summary>
+                        <p>Банковские карты (Visa, Mastercard, Мир), Apple Pay, Google Pay, Telegram Payments. Для юрлиц — безналичный расчет.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- Гарантии -->
+        <section class="guarantee-section">
+            <div class="container">
+                <div class="guarantee-card">
+                    <div class="guarantee-icon">🛡️</div>
+                    <h3>Гарантия возврата 7 дней</h3>
+                    <p>Не понравилось? Вернем деньги без лишних вопросов. Мы уверены в качестве своего продукта.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Футер -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">⚡️ Простое право</div>
+            <p>Знание прав освобождает от неприятностей</p>
+            <div class="footer-links">
+                <a href="index.html">Главная</a>
+                <a href="library.html">Библиотека</a>
+                <a href="practice.html">Практика</a>
+            </div>
+            <div class="social-links">
+                <a href="#" onclick="App.openTelegram()">Telegram</a>
+                <a href="#">TikTok</a>
+                <a href="#">YouTube</a>
+            </div>
+            <p class="disclaimer">Мы не являемся юридической фирмой и не оказываем юридических услуг в классическом понимании.</p>
+        </div>
+    </footer>
+
+    <!-- Toast уведомления -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Модули JS -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/gamification.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/payments.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

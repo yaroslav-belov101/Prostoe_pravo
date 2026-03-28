@@ -1,6 +1,512 @@
 /* ============================================
-   ДОПОЛНИТЕЛЬНЫЕ КОМПОНЕНТЫ
+ДОПОЛНИТЕЛЬНЫЕ КОМПОНЕНТЫ
+============================================ */
+
+/* ============================================
+   CONTAINER (центрирование контента)
    ============================================ */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 5%;
+}
+
+/* ============================================
+   QUICK TOPICS (быстрый доступ)
+   ============================================ */
+.quick-topics {
+    padding: 4rem 5%;
+    background: linear-gradient(to bottom, var(--bg), #111);
+}
+
+.topic-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.chip-topic {
+    display: inline-flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.chip-topic:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0, 255, 136, 0.1);
+}
+
+.chip-topic.highlight {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+}
+
+.chip-topic.highlight:hover {
+    background: var(--accent-hover);
+}
+
+/* ============================================
+   PROJECT STATS (статистика проекта)
+   ============================================ */
+.project-stats {
+    padding: 4rem 5%;
+    background: var(--card-bg);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.stat-card {
+    text-align: center;
+    padding: 2rem;
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+/* ============================================
+   CTA SECTION
+   ============================================ */
+.cta-section {
+    padding: 6rem 5%;
+    text-align: center;
+    background: radial-gradient(ellipse at center, rgba(0, 255, 136, 0.1) 0%, transparent 70%);
+}
+
+.cta-content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.cta-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.cta-content p {
+    color: var(--gray);
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-large {
+    padding: 1.25rem 2.5rem;
+    font-size: 1.1rem;
+}
+
+/* ============================================
+   FOOTER LINKS
+   ============================================ */
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+}
+
+.footer-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+    color: var(--accent);
+}
+
+/* ============================================
+   LIBRARY SPECIFIC
+   ============================================ */
+.library-progress {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(0, 255, 136, 0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(0, 255, 136, 0.2);
+}
+
+.continue-section {
+    padding: 2rem 5%;
+    background: linear-gradient(to right, rgba(0, 255, 136, 0.1), transparent);
+    margin: 2rem 0;
+}
+
+.continue-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    background: var(--card-bg);
+    padding: 1.5rem 2rem;
+    border-radius: 16px;
+    border: 1px solid var(--accent);
+    max-width: 800px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+
+.continue-label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.continue-info h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+}
+
+.continue-meta {
+    display: flex;
+    gap: 1rem;
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   PRACTICE PAGE
+   ============================================ */
+.practice-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+    max-width: 600px;
+}
+
+.practice-stat-card {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid var(--border);
+}
+
+.practice-stat-card .stat-number {
+    font-size: 2rem;
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.practice-stat-card .stat-label {
+    font-size: 0.85rem;
+    color: var(--gray);
+    margin-top: 0.5rem;
+}
+
+.problems-section {
+    padding: 4rem 5%;
+}
+
+.problem-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Simulator */
+.simulator-section {
+    padding: 4rem 5%;
+    background: linear-gradient(to bottom, var(--bg), #111);
+}
+
+.simulator-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 3rem;
+    border: 1px solid var(--border);
+    align-items: center;
+}
+
+.simulator-info h2 {
+    margin-bottom: 1rem;
+}
+
+.badge-new {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--bg);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.feature-list {
+    list-style: none;
+    margin: 1.5rem 0;
+}
+
+.feature-list li {
+    padding: 0.5rem 0;
+    color: var(--gray);
+}
+
+.simulator-preview {
+    background: var(--bg);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+}
+
+.chat-preview {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.chat-bubble {
+    background: var(--card-bg);
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.chat-bubble.bot {
+    border-left: 3px solid var(--accent);
+}
+
+.chat-name {
+    font-size: 0.8rem;
+    color: var(--gray);
+    margin-bottom: 0.25rem;
+    display: block;
+}
+
+.chat-options-preview {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.chat-options-preview .option {
+    padding: 0.75rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: var(--gray);
+}
+
+.chat-options-preview .option.selected {
+    border-color: var(--accent);
+    background: rgba(0, 255, 136, 0.1);
+    color: var(--accent);
+}
+
+/* ============================================
+   PRICING PAGE
+   ============================================ */
+.pricing-header {
+    text-align: center;
+}
+
+.billing-toggle {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 2rem;
+    background: var(--card-bg);
+    padding: 0.5rem;
+    border-radius: 12px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.toggle-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    background: transparent;
+    color: var(--gray);
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.toggle-btn.active {
+    background: var(--accent);
+    color: var(--bg);
+}
+
+.discount-badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: var(--danger);
+    color: white;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.pricing-section {
+    padding: 4rem 5%;
+}
+
+.pricing-header-card {
+    margin-bottom: 1.5rem;
+}
+
+.price-note {
+    color: var(--gray);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.pricing-features {
+    list-style: none;
+    margin: 1.5rem 0;
+}
+
+.pricing-features li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+}
+
+.pricing-features li.disabled {
+    color: var(--gray);
+    opacity: 0.6;
+}
+
+.check {
+    color: var(--accent);
+    font-weight: bold;
+}
+
+.cross {
+    color: var(--danger);
+}
+
+/* Comparison Table */
+.comparison-section {
+    padding: 4rem 5%;
+    overflow-x: auto;
+}
+
+.comparison-table-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+}
+
+.comparison-table th,
+.comparison-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+.comparison-table th {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.comparison-table td.highlight {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+/* Guarantee */
+.guarantee-section {
+    padding: 4rem 5%;
+    text-align: center;
+}
+
+.guarantee-card {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 3rem;
+    background: var(--card-bg);
+    border-radius: 24px;
+    border: 1px solid var(--border);
+}
+
+.guarantee-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+/* ============================================
+MOBILE ADAPTATIONS
+============================================ */
+@media (max-width: 768px) {
+    .simulator-card {
+        grid-template-columns: 1fr;
+    }
+    
+    .continue-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .cta-content h2 {
+        font-size: 1.75rem;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .comparison-table {
+        font-size: 0.9rem;
+    }
+    
+    .comparison-table th,
+    .comparison-table td {
+        padding: 0.75rem 0.5rem;
+    }
+}
 
 /* Tip boxes */
 .tip-box, .warning-box, .info-box {

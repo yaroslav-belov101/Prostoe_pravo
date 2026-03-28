@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Практика — Простое право</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+
+<body>
+    <!-- Навигация -->
+    <nav class="navbar">
+        <div class="logo" onclick="window.location.href='index.html'">⚡️ Простое право</div>
+        
+        <!-- Десктопное меню -->
+        <ul class="nav-links" id="desktop-nav">
+            <li><a href="library.html">📚 Библиотека</a></li>
+            <li><a href="practice.html" class="active">🎯 Практика</a></li>
+            <li><a href="pricing.html">💎 Тарифы</a></li>
+        </ul>
+
+        <!-- Статистика пользователя -->
+        <div class="user-mini-stats" id="user-mini-stats">
+            <span class="level-badge" id="mini-level">Новичок</span>
+            <span class="xp-badge" id="mini-xp">0 XP</span>
+        </div>
+
+        <button class="mobile-menu-btn" onclick="App.toggleMobileMenu()" aria-label="Меню">☰</button>
+    </nav>
+
+    <!-- Мобильное меню -->
+    <div class="mobile-menu" id="mobile-menu">
+        <button class="mobile-menu-close" onclick="App.toggleMobileMenu()">✕</button>
+        <ul>
+            <li><a href="index.html" onclick="App.toggleMobileMenu()">🏠 Главная</a></li>
+            <li><a href="library.html" onclick="App.toggleMobileMenu()">📚 Библиотека</a></li>
+            <li><a href="practice.html" onclick="App.toggleMobileMenu()">🎯 Практика</a></li>
+            <li><a href="pricing.html" onclick="App.toggleMobileMenu()">💎 Тарифы</a></li>
+        </ul>
+        <div class="mobile-user-stats">
+            <div class="stat-item">
+                <span class="stat-label">Уровень</span>
+                <span class="stat-value" id="mobile-level">Новичок</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">XP</span>
+                <span class="stat-value" id="mobile-xp">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Серия</span>
+                <span class="stat-value" id="mobile-streak">🔥 0</span>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- Header практики -->
+        <section class="page-header">
+            <div class="container">
+                <h1>🎯 Практика</h1>
+                <p class="subtitle">Проверь свои знания в реальных ситуациях. Симуляторы, тесты и кейсы.</p>
+                
+                <!-- Статистика практики -->
+                <div class="practice-stats">
+                    <div class="practice-stat-card">
+                        <div class="stat-number" id="tests-completed">0</div>
+                        <div class="stat-label">Тестов пройдено</div>
+                    </div>
+                    <div class="practice-stat-card">
+                        <div class="stat-number" id="accuracy-rate">0%</div>
+                        <div class="stat-label">Точность ответов</div>
+                    </div>
+                    <div class="practice-stat-card">
+                        <div class="stat-number" id="practice-xp">0</div>
+                        <div class="stat-label">XP заработано</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Типичные ситуации (проблемы) -->
+        <section class="problems-section">
+            <div class="container">
+                <h2>Типичные ситуации, где тебя могут кинуть</h2>
+                <p class="section-subtitle">Выбери сценарий и узнай, как правильно действовать</p>
+                
+                <div class="problem-grid" id="problems-grid">
+                    <!-- JS заполнит -->
+                    <div class="problem-card">
+                        <div class="problem-icon">🏠</div>
+                        <h3>Хозяин не возвращает депозит</h3>
+                        <p>Что делать, если после выселения арендодатель придумывает отговорки?</p>
+                        <button class="btn btn-small" onclick="App.showSolution('deposit')">Решение</button>
+                    </div>
+                    
+                    <div class="problem-card">
+                        <div class="problem-icon">💼</div>
+                        <h3>Заставляют работать бесплатно</h3>
+                        <p>Стажировка без договора или испытательный срок без зарплаты</p>
+                        <button class="btn btn-small" onclick="App.showSolution('work')">Решение</button>
+                    </div>
+                    
+                    <div class="problem-card">
+                        <div class="problem-icon">📱</div>
+                        <h3>Коллекторы звонят по чужому долгу</h3>
+                        <p>Как прекратить骚扰 и защитить свои данные</p>
+                        <button class="btn btn-small" onclick="App.showSolution('collectors')">Решение</button>
+                    </div>
+                    
+                    <div class="problem-card">
+                        <div class="problem-icon">🛒</div>
+                        <h3>Отказываются возвращать товар</h3>
+                        <p>Права потребителя при возврате техники и одежды</p>
+                        <button class="btn btn-small" onclick="App.showSolution('return')">Решение</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Квиз / Тестирование -->
+        <section id="test" class="quiz-section">
+            <div class="container">
+                <div class="quiz-container">
+                    <h2>🧠 Проверь свой юридический уровень</h2>
+                    <p class="section-subtitle">Ответь на 3 вопроса и получи рекомендации по обучению</p>
+                    
+                    <div id="quiz">
+                        <div class="quiz-question active" data-question="1">
+                            <div class="question-header">
+                                <span class="question-number">Вопрос 1 из 3</span>
+                                <span class="question-topic">🏠 Аренда</span>
+                            </div>
+                            <p class="question-text">Ты сдаешь квартиру. Жилец разбил окно. Кто платит?</p>
+                            <div class="quiz-options">
+                                <button class="quiz-btn" onclick="Quiz.answer(1, false)">Жилец, он же разбил</button>
+                                <button class="quiz-btn" onclick="Quiz.answer(1, true)">Смотря что написано в акте приема-передачи</button>
+                                <button class="quiz-btn" onclick="Quiz.answer(1, false)">Делим пополам</button>
+                            </div>
+                        </div>
+                        
+                        <div class="quiz-question" data-question="2">
+                            <div class="question-header">
+                                <span class="question-number">Вопрос 2 из 3</span>
+                                <span class="question-topic">💼 Работа</span>
+                            </div>
+                            <p class="question-text">Тебя уволили «по соглашению сторон» без выплат. Твои действия?</p>
+                            <div class="quiz-options">
+                                <button class="quiz-btn" onclick="Quiz.answer(2, false)">Подписать, чтобы не конфликтовать</button>
+                                <button class="quiz-btn" onclick="Quiz.answer(2, true)">Требовать компенсацию или отказаться</button>
+                                <button class="quiz-btn" onclick="Quiz.answer(2, false)">Написать гневный пост в Twitter</button>
+                            </div>
+                        </div>
+                        
+                        <div class="quiz-question" data-question="3">
+                            <div class="question-header">
+                                <span class="question-number">Вопрос 3 из 3</span>
+                                <span class="question-topic">💸 Долги</span>
+                            </div>
+                            <p class="question-text">Пришло письмо от коллекторов по чужому долгу. Что делать?</p>
+                            <div class="quiz-options">
+                                <button class="quiz-btn" onclick="Quiz.answer(3, false)">Игнорировать — раз не мой долг</button>
+                                <button class="quiz-btn" onclick="Quiz.answer(3, false)">Заплатить, чтобы отстали</button>
+                                <button class="quiz-btn" onclick="Quiz.answer(3, true)">Направить заявление о прекращении обработки данных</button>
+                            </div>
+                        </div>
+                        
+                        <div class="quiz-result" id="quiz-result">
+                            <div class="result-icon" id="result-icon">🏆</div>
+                            <h3 id="result-title"></h3>
+                            <p id="result-text"></p>
+                            <div class="result-score" id="result-score"></div>
+                            <div id="result-actions" class="result-actions">
+                                <a href="library.html" class="btn btn-primary">📚 Учиться в библиотеке</a>
+                                <button class="btn btn-outline" onclick="Quiz.restart()">🔄 Пройти еще раз</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Симулятор переговоров -->
+        <section class="simulator-section">
+            <div class="container">
+                <div class="simulator-card">
+                    <div class="simulator-info">
+                        <span class="badge-new">NEW</span>
+                        <h2>🎮 Симулятор переговоров</h2>
+                        <p>Попробуй свои силы в диалоге с ботом-работодателем, который пытается тебя обмануть. Выбирай ответы и смотри, к чему они приведут.</p>
+                        <ul class="feature-list">
+                            <li>✓ Реальные диалоги из HR-практики</li>
+                            <li>✓ Подсказки юриста после каждого раунда</li>
+                            <li>✓ +100 XP за успешное прохождение</li>
+                        </ul>
+                        <button class="btn btn-primary btn-large" onclick="App.startSimulation()">
+                            Начать симуляцию
+                        </button>
+                    </div>
+                    <div class="simulator-preview">
+                        <div class="chat-preview">
+                            <div class="chat-bubble bot">
+                                <span class="chat-name">HR-менеджер</span>
+                                <p>Мы готовы взять тебя, но оформим по договору ГПХ, так проще для начала</p>
+                            </div>
+                            <div class="chat-options-preview">
+                                <div class="option">Согласиться</div>
+                                <div class="option selected">Требовать ТК РФ</div>
+                                <div class="option">Уточнить условия</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Футер -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">⚡️ Простое право</div>
+            <p>Знание прав освобождает от неприятностей</p>
+            <div class="footer-links">
+                <a href="index.html">Главная</a>
+                <a href="library.html">Библиотека</a>
+                <a href="pricing.html">Тарифы</a>
+            </div>
+            <div class="social-links">
+                <a href="#" onclick="App.openTelegram()">Telegram</a>
+                <a href="#">TikTok</a>
+                <a href="#">YouTube</a>
+            </div>
+            <p class="disclaimer">Мы не являемся юридической фирмой и не оказываем юридических услуг в классическом понимании.</p>
+        </div>
+    </footer>
+
+    <!-- Toast уведомления -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Модули JS -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/gamification.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/quiz.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
